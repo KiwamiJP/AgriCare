@@ -25,3 +25,4 @@ Route::get('/home', function () {
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('posts', PostController::class);
 });
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');

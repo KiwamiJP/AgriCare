@@ -18,13 +18,6 @@
             body {
                 font-family: 'Nunito', sans-serif;
             }
-            
-        .card-img-top {
-            width: 100%;
-            height: 200px; /* Set a fixed height */
-            object-fit: cover; /* Ensure the image covers the area without distortion */
-        }
-    
         </style>
     </head>
     <body class="antialiased">
@@ -39,7 +32,9 @@
                 <ul class="navbar-nav ml-auto">
                     @if (Route::has('login'))
                         @auth
-                           
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/home') }}">Home</a>
+                            </li>
                             
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('logout') }}"
@@ -68,20 +63,19 @@
     </nav>
         <div class="container mt-5">
         <div class="row">
-            @foreach ($posts ?? '' as $post)
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        @if ($post->photo)
-                            <img src="{{ asset('images/' . $post->photo) }}" class="card-img-top" alt="{{ $post->title }}">
-                        @endif
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $post->title }}</h5>
-                            <p class="card-text">{{ Str::limit($post->content, 100) }}</p>
-                            <a href="{{ route('posts.show', $post->id) }}" class="btn btn-primary">Read More</a>
-                        </div>
-                    </div>
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                @if ($post->photo)
+                    <img src="{{ asset('images/' . $post->photo) }}" class="card-img-top" alt="{{ $post->title }}">
+                @endif
+                <div class="card-body">
+                    <h5 class="card-title">{{ $post->title }}</h5>
+                    <p class="card-text">{{ $post->content }}</p>
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary">Back</a>
                 </div>
-            @endforeach
+            </div>
+        </div>
+            
         </div>
     </div>
        <!-- Scripts -->
