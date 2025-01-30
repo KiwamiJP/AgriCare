@@ -18,5 +18,10 @@ Route::get('/', [PostController::class, 'welcome'])->name('welcome');
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::resource('admin/posts', PostController::class);
+Route::get('/home', function () {
+    return redirect('/');
+})->name('home');
+// Admin routes
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('posts', PostController::class);
+});

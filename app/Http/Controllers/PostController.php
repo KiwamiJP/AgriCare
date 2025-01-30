@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-use App\Http\Controllers\PostController;
 
 class PostController extends Controller
 {
     public function welcome()
     {
         $posts = Post::all();
-        return view('welcome',compact('posts'));
+        return view('welcome', compact('posts'));
     }
+
     public function index()
     {
         $posts = Post::all();
@@ -30,9 +30,10 @@ class PostController extends Controller
             'title' => 'required',
             'content' => 'required',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-
         ]);
+
         $data = $request->all();
+
         if ($request->hasFile('photo')) {
             $imageName = time().'.'.$request->photo->extension();
             $request->photo->move(public_path('images'), $imageName);
@@ -41,7 +42,7 @@ class PostController extends Controller
 
         Post::create($data);
 
-        return redirect()->route('posts.index')->with('success', 'Post created successfully.');
+        return redirect()->route('admin.posts.index')->with('success', 'Post created successfully.');
     }
 
     public function show(Post $post)
@@ -61,23 +62,34 @@ class PostController extends Controller
             'content' => 'required',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+
         $data = $request->all();
+
         if ($request->hasFile('photo')) {
+            if ($post->photo && file_exists(public_path('images/' . $post->photo))) {
+                unlink(public_path('images/' . $post->photo));
+            }
+
             $imageName = time().'.'.$request->photo->extension();
             $request->photo->move(public_path('images'), $imageName);
             $data['photo'] = $imageName;
-        }else{
+        } else {
             unset($data['photo']);
         }
+
         $post->update($data);
 
-        return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
+        return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully.');
     }
 
     public function destroy(Post $post)
     {
+        if ($post->photo && file_exists(public_path('images/' . $post->photo))) {
+            unlink(public_path('images/' . $post->photo));
+        }
+
         $post->delete();
 
-        return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
+        return redirect()->route('admin.posts.index')->with('success', 'Post deleted successfully.');
     }
 }

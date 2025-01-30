@@ -96,7 +96,7 @@
                 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <a href="{{ route('posts.create') }}" class="btn btn-success mb-3">Create Post</a>
+            <a href="{{ route('admin.posts.create') }}" class="btn btn-success mb-3">Create Post</a>
             @if (session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
@@ -123,8 +123,8 @@
                                     <td>{{ $post->title }}</td>
                                     <td>{{ $post->content }}</td>
                                     <td>
-                                        <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-primary">Edit</a>
-                                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST" style="display:inline-block;">
+                                        <a href="{{ route('admin.posts.edit', $post->id) }}" class="btn btn-primary">Edit</a>
+                                        <form action="{{ route('admin.posts.destroy', $post->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger">Delete</button>
