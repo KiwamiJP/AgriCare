@@ -108,7 +108,7 @@
                             <h3 class="card-title">Create Post</h3>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('admin.posts.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
                                     <label for="title">Title</label>
@@ -121,6 +121,16 @@
                                 <div class="form-group">
                                     <label for="image">Photo</label>
                                     <input type="file" name="photo" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+            <label for="category_id">Category</label>
+            <select name="category_id" class="form-control" id="category_id">
+                <option value="">Select Category</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
+            </select>
+        </div>
                                 <button type="submit" class="btn btn-success">Create</button>
                             </form>
                         </div>

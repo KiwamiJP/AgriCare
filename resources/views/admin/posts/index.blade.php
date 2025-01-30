@@ -121,7 +121,7 @@
                                 <tr>
                                     <td>{{ $post->id }}</td>
                                     <td>{{ $post->title }}</td>
-                                    <td>{{ $post->content }}</td>
+                                    <td>{{ Str::limit($post->content, 100) }}</td>
                                     <td>
                                         <a href="{{ route('admin.posts.edit', $post->id) }}" class="btn btn-primary">Edit</a>
                                         <form action="{{ route('admin.posts.destroy', $post->id) }}" method="POST" style="display:inline-block;">
