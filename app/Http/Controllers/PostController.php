@@ -13,10 +13,10 @@ class PostController extends Controller
         $posts = Post::all();
         return view('welcome', compact('posts'));
     }
-
+   
     public function index()
     {
-        $posts = Post::with('category')->get();
+        $posts = Post::with('category')->paginate(5);
         return view('admin.posts.index', compact('posts'));
     }
 

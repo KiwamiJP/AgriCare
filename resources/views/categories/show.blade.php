@@ -18,47 +18,24 @@
             body {
                 font-family: 'Nunito', sans-serif;
             }
-            
-        .card-img-top {
-            width: 100%;
-            height: 200px; /* Set a fixed height */
-            object-fit: cover; /* Ensure the image covers the area without distortion */
-        }
-    
         </style>
     </head>
     <body class="antialiased">
         <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">AgriCare</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-        
-      </ul>
-            <ul class="navbar-nav mr-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">စိုက်ပျိုးရေး
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            @foreach(App\Models\Category::all() as $category)
-                                <a class="dropdown-item" href="{{ route('categories.show', $category->id) }}">{{ $category->name }}</a>
-                            @endforeach
-                        </div>
-                    </li>
-                </ul>    
-            <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav ml-auto">
                     @if (Route::has('login'))
                         @auth
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/home') }}">Home</a>
+                            </li>
                             
-                        @if (auth()->user()->hasRole('admin'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.posts.index') }}">Dashboard</a>
-                                </li>
-                            @endif
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
@@ -86,7 +63,7 @@
     </nav>
         <div class="container mt-5">
         <div class="row">
-            @foreach ($posts ?? '' as $post)
+        @foreach ($posts ?? '' as $post)
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         @if ($post->photo)
@@ -100,6 +77,7 @@
                     </div>
                 </div>
             @endforeach
+            
         </div>
     </div>
        <!-- Scripts -->
