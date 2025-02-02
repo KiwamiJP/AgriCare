@@ -40,15 +40,20 @@
         
       </ul>
             <ul class="navbar-nav mr-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">စိုက်ပျိုးရေး
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            @foreach(App\Models\Category::all() as $category)
-                                <a class="dropdown-item" href="{{ route('categories.show', $category->id) }}">{{ $category->name }}</a>
-                            @endforeach
-                        </div>
-                    </li>
+            @foreach(App\Models\Category::whereNull('parent_id')->get() as $parent)
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle ml-5" href="#" id="navbarDropdown{{ $parent->id }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ $parent->name }}
+            </a>
+            @if($parent->children->isNotEmpty())
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown{{ $parent->id }}">
+                    @foreach($parent->children as $child)
+                        <a class="dropdown-item" href="{{ route('categories.show', $child->id) }}">{{ $child->name }}</a>
+                    @endforeach
+                </div>
+            @endif
+        </li>
+    @endforeach
                 </ul>    
             <ul class="navbar-nav ml-auto">
                     @if (Route::has('login'))

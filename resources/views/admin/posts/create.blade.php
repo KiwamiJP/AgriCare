@@ -123,14 +123,22 @@
                                     <input type="file" name="photo" class="form-control" required>
                                 </div>
                                 <div class="form-group">
-            <label for="category_id">Category</label>
-            <select name="category_id" class="form-control" id="category_id">
-                <option value="">Select Category</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                @endforeach
-            </select>
-        </div>
+                                                <label for="category_id">Category</label>
+                                                <select name="category_id" class="form-control" id="category_id" required>
+                                                    <option value="">Select Category</option>
+                                                    @foreach($categories as $category)
+                                                        @if($category->parent_id === null) <!-- Check if it's a main category -->
+                                                            <optgroup label="{{ $category->name }}">
+                                                                @foreach($categories as $subcategory)
+                                                                    @if($subcategory->parent_id === $category->id) <!-- Check if it's a subcategory -->
+                                                                        <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
+                                                                    @endif
+                                                                @endforeach
+                                                            </optgroup>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                 <button type="submit" class="btn btn-success">Create</button>
                             </form>
                         </div>
