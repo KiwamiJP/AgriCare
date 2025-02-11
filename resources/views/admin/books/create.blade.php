@@ -1,4 +1,5 @@
 
+
 @extends('layouts.master')
 
 @section('content')
@@ -8,7 +9,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!--CSRF Token -->
+    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
@@ -87,7 +88,7 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1 class="m-0 text-dark">Posts List</h1>
+                                <h1 class="m-0 text-dark">Books List</h1>
                             </div><!-- /.col -->
                             <!-- /.col -->
                         </div><!-- /.row -->
@@ -102,41 +103,49 @@
                          
                         <div class="col-md-12">
                        
+                       
                         <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Edit Post</h3>
+                        <div class="card-header">
+                            <h3 class="card-title">Upload Book</h3>
+                        </div>
+                        <div class="card-body">
+            <form action="{{ route('admin.books.store') }}" method="POST" enctype="multipart/form-data">
+             <!-- Add this at the top of your form -->
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif  
+            @csrf
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" name="title" class="form-control" id="title" required>
                 </div>
-                <div class="card-body">
-                    <form action="{{ route('admin.posts.update', $post->id) }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        @method('PUT')
-                        <div class="form-group">
-                            <label for="title">Title</label>
-                            <input type="text" name="title" class="form-control" value="{{ $post->title }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="content">Content</label>
-                            <textarea name="content" class="form-control" rows="5" required>{{ $post->content }}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="photo">Photo</label>
-                            <input type="file" name="photo" class="form-control" required>
-                            @if ($post->photo)
-                                <img src="{{ asset('images/' . $post->photo) }}" class="img-thumbnail" width="100" alt="{{ $post->title }}">
-                            @endif    
-                        </div>
-                        <div class="form-group">
-            <label for="category_id">Category</label>
-            <select name="category_id" class="form-control" id="category_id">
-                <option value="">Select Category</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ $post->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                @endforeach
-            </select>
-        </div>
-                        <button type="submit" class="btn btn-success">Update</button>
-                    </form>
+                <div class="form-group">
+                    <label for="author">Author</label>
+                    <input type="text" name="author" class="form-control" id="author" required>
                 </div>
+                <div class="form-group">
+                    <label for="category_id">Category</label>
+                    <select name="category_id" class="form-control" id="category_id" required>
+                        <option value="">Select Category</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="file">Book File</label>
+                    <input type="file" name="file" class="form-control" id="file" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Book</button>
+            </form>
+                        </div>
+                    </div>
             </div>
                         <!-- /.row -->
                     </div><!-- /.container-fluid -->
@@ -148,16 +157,4 @@
     </div>
 </body>
 </html>
-@endsection 
-
-
-
-
-
-
-
-
-
-
-
-
+@endsection

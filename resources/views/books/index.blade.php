@@ -18,55 +18,40 @@
             body {
                 font-family: 'Nunito', sans-serif;
             }
-            
-        .card-img-top {
-            width: 100%;
-            height: 200px; /* Set a fixed height */
-            object-fit: cover; /* Ensure the image covers the area without distortion */
-        }
-    
         </style>
     </head>
     <body class="antialiased">
         <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">AgriCare</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-        
-      </ul>
+        <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
-            @foreach(App\Models\Category::whereNull('parent_id')->get() as $parent)
-            <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle ml-5" href="#" id="navbarDropdown{{ $parent->id }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ $parent->name }}
-            </a>
-            @if($parent->children->isNotEmpty())
+                @foreach(App\Models\Category::whereNull('parent_id')->get() as $parent)
+                 <li class="nav-item dropdown">
+                 <a class="nav-link dropdown-toggle ml-5" href="#" id="navbarDropdown{{ $parent->id }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ $parent->name }}
+                </a>
+                     @if($parent->children->isNotEmpty())
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown{{ $parent->id }}">
                     @foreach($parent->children as $child)
                         <a class="dropdown-item" href="{{ route('categories.show', $child->id) }}">{{ $child->name }}</a>
                     @endforeach
                 </div>
-            @endif
-        </li>
-            @endforeach
-            <li class="nav-item">
-            <a class="nav-link ml-5" href="{{ route('books.index') }}">စာအုပ်စင်</a>
-            </li>
-                </ul>    
-            <ul class="navbar-nav ml-auto">
+                    @endif
+                </li>
+                 @endforeach
+                </ul> 
+                <ul class="navbar-nav ml-auto">
                     @if (Route::has('login'))
                         @auth
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/home') }}">Home</a>
+                            </li>
                             
-                        @if (auth()->user()->hasRole('admin'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.posts.index') }}">Dashboard</a>
-                                </li>
-                            @endif
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
@@ -89,27 +74,85 @@
                         @endauth
                     @endif
                 </ul>
-            </div>
-        </div>
-    </nav>
-        <div class="container mt-5">
-        <div class="row">
-            @foreach ($posts ?? '' as $post)
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        @if ($post->photo)
-                            <img src="{{ asset('images/' . $post->photo) }}" class="card-img-top" alt="{{ $post->title }}">
-                        @endif
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $post->title }}</h5>
-                            <p class="card-text">{{ Str::limit($post->content, 100) }}</p>
-                            <a href="{{ route('posts.show', $post->id) }}" class="btn btn-primary">Read More</a>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
         </div>
     </div>
+    </nav>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="d-flex">
+                <form class="my-4 mr-2 form-inline" action="https://greenwaymyanmar.com/books" method="POST">
+                    <input type="hidden" name="_token" value="rADzb5vmtOwYQlIx8oOZJS4ROSUF5hcLKxFVHU7W">
+                    <label class="my-1 mr-2" for="author">စာရေးဆရာ</label>
+                    <select class="custom-select my-1 mr-sm-2" id="author" name="author" onchange="this.form.submit()">
+                        <option value="all">အားလုံး</option>
+                        <option value="19">အစိမ်းရောင်လမ်း</option>
+                        <option value="22">စိုက်ပျိုးရေးဦးစီးဌာန</option>
+                        <option value="42">Dr. Khin Hnin Yu</option>
+                        <option value="39">ko khun</option>
+                        <option value="5714">Kyaw Swar Win</option>
+                        <option value="17367">ကမ္ဘာ့ငါးအဖွဲ့</option>
+                        <option value="200">ဆင်းသီဟ</option>
+                        <option value="14">ဒေါက်တာ ခင်မာဌေး - (စိုက်/သု)</option>
+                        <option value="10653">internews</option>
+                        <option value="5">သိန်းစိုးမင်း</option>
+                        <option value="36">ဦးဘဟိန်း</option>
+                    </select>
+                    <label class="my-1 mr-2" for="category">အမျိုးအစား</label>
+                    <select class="custom-select my-1 mr-sm-2" id="category" name="category" onchange="this.form.submit()">
+                        <option value="all">အားလုံး</option>
+                        <option value="2">အထွေထွေ ဗဟုသုတ</option>
+                        <option value="5">အပင်အာဟာရ</option>
+                        <option value="6">စိုက်ပျိုးနည်း</option>
+                        <option value="7">ပိုးမွှားရောဂါ</option>
+                        <option value="8">စိုက်ပျိုးစီးပွား</option>
+                        <option value="10">ရိတ်သိမ်းချိန်လွန်နည်းပညာ</option>
+                        <option value="11">တန်ဘိုးမြှင့်ထုတ်ကုန်</option>
+                        <option value="12">စိုက်ပျိုး ရေ</option>
+                        <option value="13">စိုက်ပျိုး ဗဟုသုတ</option>
+                        <option value="14">အာဟာရနှင့် ကျန်းမာရေး</option>
+                        <option value="15">ပတ်ဝန်းကျင်ဆိုင်ရာ</option>
+                        <option value="16">အတွေးအမြင်ဆောင်းပါး</option>
+                        <option value="17">စိုက်ပျိုးရေး ဥပဒေများ</option>
+                        <option value="21">မွေးမြူရေး ဆောင်းပါးများ</option>
+                        <option value="35">ငါး</option>
+                        <option value="37">ငွေကြေးစီမံခန့်ခွဲမှု</option>
+                        <option value="41">ရေလုပ်ငန်း</option>
+                        <option value="51">မွေးမြူနည်း</option>
+                    </select>
+                </form>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-4">
+                    <a href="https://greenwaymyanmar.com/books/happy_fish_cook_book" class="book">
+                        <div class="book-cover">
+                            <img src="https://greenway.sgp1.digitaloceanspaces.com/book_covers/Happy Cook.png" class="img-fluid">
+                        </div>
+                        <h2 class="book-title">ပျော်ရွှင်ဖွယ် ငါးဟင်းချက်နည်းစာအုပ်</h2>
+                        <small class="text-muted">ကမ္ဘာ့ငါးအဖွဲ့</small>
+                    </a>
+                </div>
+                <!-- Repeat similar blocks for other books -->
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="https://greenwaymyanmar.com/books?page=2">2</a></li>
+                    <li class="page-item"><a class="page-link" href="https://greenwaymyanmar.com/books?page=3">3</a></li>
+                    <li class="page-item"><a class="page-link" href="https://greenwaymyanmar.com/books?page=4">4</a></li>
+                    <li class="page-item"><a class="page-link" href="https://greenwaymyanmar.com/books?page=5">5</a></li>
+                    <li class="page-item"><a class="page-link" href="https://greenwaymyanmar.com/books?page=6">6</a></li>
+                    <li class="page-item"><a class="page-link" href="https://greenwaymyanmar.com/books?page=7">7</a></li>
+                    <li class="page-item"><a class="page-link" href="https://greenwaymyanmar.com/books?page=8">8</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="https://greenwaymyanmar.com/books?page=2">→</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
        <!-- Scripts -->
        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

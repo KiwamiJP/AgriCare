@@ -1,4 +1,3 @@
-
 @extends('layouts.master')
 
 @section('content')
@@ -8,10 +7,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!--CSRF Token -->
+    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'AgriCare') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -25,10 +24,10 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm sticky-top">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ config('app.name', 'AgriCare') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -56,11 +55,16 @@
                                 </li>
                             @endif
                         @else
+                            <li class="nav-item">
+                            <a class="nav-link" href="/home">Home</a>
+
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
                                 </a>
-
+                             
+                           
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
@@ -87,77 +91,68 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1 class="m-0 text-dark">Posts List</h1>
+                                <h1 class="m-0 text-dark">Books List</h1>
                             </div><!-- /.col -->
                             <!-- /.col -->
                         </div><!-- /.row -->
                     </div><!-- /.container-fluid -->
                 </div>
                 <!-- /.content-header -->
-
-                <!-- Main content -->
-                <div class="content">
-                    <div class="container-fluid">
-                        <div class="row">   
-                         
-                        <div class="col-md-12">
-                       
-                        <div class="card">
+                <div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{ route('admin.books.create') }}" class="btn btn-success mb-3">Upload Book</a>
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Edit Post</h3>
+                    <h3 class="card-title">Books</h3>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.posts.update', $post->id) }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        @method('PUT')
-                        <div class="form-group">
-                            <label for="title">Title</label>
-                            <input type="text" name="title" class="form-control" value="{{ $post->title }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="content">Content</label>
-                            <textarea name="content" class="form-control" rows="5" required>{{ $post->content }}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="photo">Photo</label>
-                            <input type="file" name="photo" class="form-control" required>
-                            @if ($post->photo)
-                                <img src="{{ asset('images/' . $post->photo) }}" class="img-thumbnail" width="100" alt="{{ $post->title }}">
-                            @endif    
-                        </div>
-                        <div class="form-group">
-            <label for="category_id">Category</label>
-            <select name="category_id" class="form-control" id="category_id">
-                <option value="">Select Category</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ $post->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                @endforeach
-            </select>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Category</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($books as $book)
+                        <tr>
+                            <td>{{ $book->id }}</td>
+                            <td>{{ $book->title }}</td>
+                            <td>{{ $book->author }}</td>
+                            <td>{{ $book->category->name ?? 'N/A' }}</td>
+                            <td>
+                                <a href="{{ route('admin.books.edit', $book->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                                <form action="{{ route('admin.books.destroy', $book->id) }}" method="POST" style="display:inline-block;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                        </tbody>
+                    </table>
+                   
+                </div>
+            </div>
+            <div class="d-flex justify-content-center float-right">
+                {{ $books->links('vendor.pagination.bootstrap-4') }} <!-- Pagination links -->
+            </div>
         </div>
-                        <button type="submit" class="btn btn-success">Update</button>
-                    </form>
-                </div>
-            </div>
-                        <!-- /.row -->
-                    </div><!-- /.container-fluid -->
-                </div>
-                <!-- /.content -->
-            </div>
-            <!-- /.content-wrapper -->
-        </main>
+        
     </div>
+    
+</div>
+</div>
 </body>
 </html>
-@endsection 
-
-
-
-
-
-
-
-
-
-
-
-
+@endsection

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CategoryController;
 
@@ -25,8 +26,11 @@ Route::get('/home', function () {
 // Admin routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('posts', PostController::class);
+    Route::resource('books', BookController::class);
 });
+
 //Detail view route
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 //Category view route
 Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
+Route::get('/books', [BookController::class, 'publicIndex'])->name('books.index');

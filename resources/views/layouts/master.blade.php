@@ -64,20 +64,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
                with font-awesome or any other icon font library -->
           <li class="nav-item has-treeview menu-open">
             
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="/home" class="nav-link active">
-                  <i class="fa fa-pen nav-icon"></i>
-                  <p>Posts</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/books" class="nav-link">
-                  <i class="fa fa-book nav-icon"></i>
-                  <p>Books</p>
-                </a>
-              </li>
-            </ul>
+          <ul class="nav nav-treeview">
+    <li class="nav-item">
+        <a href="/admin/posts" class="nav-link {{ Request::is('admin/posts*') ? 'active' : '' }}">
+            <i class="fa fa-pen nav-icon"></i>
+            <p>Posts</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/admin/books" class="nav-link {{ Request::is('admin/books*') ? 'active' : '' }}">
+            <i class="fa fa-book nav-icon"></i>
+            <p>Books</p>
+        </a>
+    </li>
+</ul>
           </li>
           
         </ul>
