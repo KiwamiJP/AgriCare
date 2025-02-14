@@ -13,7 +13,8 @@ class Book extends Model
         'title',
         'author',
         'category_id',
-        'file_path', // Add this line
+        'file_path', 
+        'cover_image', 
     ];
 
     public function category()

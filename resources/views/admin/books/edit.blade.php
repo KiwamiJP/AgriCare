@@ -146,6 +146,18 @@
             <div class="alert alert-danger mt-2">{{ $message }}</div>
         @enderror
                 </div>
+                <div class="form-group">
+                    <label for="cover_image">Current Cover Image</label>
+                    @if ($book->cover_image)
+                        <p>
+                        <img src="{{ asset('storage/book_covers/' . basename($book->cover_image)) }}" alt="{{ $book->title }}" class="img-thumbnail" width="100">
+                        </p>                        
+                    @endif
+                    <input type="file" name="cover_image" class="form-control" id="cover_image">
+                    @error('cover_image')
+                        <div class="alert alert-danger mt-2">{{ $message }}</div>
+                    @enderror
+                </div>
                 <button type="submit" class="btn btn-primary">Update Book</button>
             </form>
         </div>

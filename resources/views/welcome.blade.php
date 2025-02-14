@@ -57,6 +57,9 @@
             <li class="nav-item">
             <a class="nav-link ml-5" href="{{ route('books.index') }}">စာအုပ်စင်</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link ml-5" href="{{route('questions-and-answers')}}">အမေးအဖြေ</a>
+            </li>
                 </ul>    
             <ul class="navbar-nav ml-auto">
                     @if (Route::has('login'))

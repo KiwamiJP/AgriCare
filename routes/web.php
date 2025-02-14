@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\QuestionAnswerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,3 +35,6 @@ Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show')
 //Category view route
 Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
 Route::get('/books', [BookController::class, 'publicIndex'])->name('books.index');
+Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
+Route::get('/questions-and-answers', [QuestionAnswerController::class, 'index'])->name('questions-and-answers');
+

@@ -142,6 +142,10 @@
                     <label for="file">Book File</label>
                     <input type="file" name="file" class="form-control" id="file" required>
                 </div>
+                <div class="form-group">
+                    <label for="cover_image">Book Cover Photo</label>
+                    <input type="file" name="cover_image" class="form-control" id="cover_image" required>
+                </div>
                 <button type="submit" class="btn btn-primary">Add Book</button>
             </form>
                         </div>
