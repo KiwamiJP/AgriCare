@@ -18,7 +18,7 @@ class BookController extends Controller
         $query->where('category_id', $request->category);
     }
     $books = $query->paginate(10);
-    $authors = Book::select('author')->distinct()->get(); // Get distinct authors from books
+    $authors = Book::select('author')->distinct()->pluck('author'); // Get distinct authors from books
     $categories = Category::all();
     return view('books.index', compact('books', 'authors', 'categories'));
 
@@ -36,32 +36,36 @@ class BookController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'author' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'file' => 'required|file|mimes:pdf,epub,mobi|max:51200', // Validate file upload
-            'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10000', // Validate cover image upload
+{
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'author' => 'required|string|max:255',
+        'category_id' => 'required|exists:categories,id',
+        'file' => 'required|file|mimes:pdf,epub,mobi|max:51200', // Validate file upload
+        'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10000', // Validate cover image upload
+        'description' => 'required|string',
+    ]);
 
-        ]);
-        $originalFileName = $request->file('file')->getClientOriginalName();
+    $originalFileName = $request->file('file')->getClientOriginalName();
 
-        $filePath = $request->file('file')->storeAs('books', time() . '_' . $originalFileName);
-        $coverImageName = time() . '_' . $request->file('cover_image')->getClientOriginalName();
-    $coverImagePath = $request->file('cover_image')->storeAs('book_covers', $coverImageName);
-        Book::create([
-            'title' => $request->title,
-            'author' => $request->author,
-            'category_id' => $request->category_id,
-            'file_path' => $filePath,
-            'file_name' => $originalFileName, // Store original file name in DB
-            'cover_image' => $coverImagePath,
-        ]);
+    // Store files in 'public' disk to make them accessible
+    $filePath = $request->file('file')->storeAs('books', time() . '_' . $originalFileName, 'public');
+    $coverImageName = time() . '_' . $request->file('cover_image')->getClientOriginalName();
+    $coverImagePath = $request->file('cover_image')->storeAs('book_covers', $coverImageName, 'public');
 
-        return redirect()->route('admin.books.index')->with('success', 'Book added successfully.');
-    }
+// Store in the database without the 'storage/' prefix
+Book::create([
+    'title' => $request->title,
+    'author' => $request->author,
+    'category_id' => $request->category_id,
+    'file_path' => Storage::url($filePath),
+    'file_name' => $originalFileName,
+    'cover_image' => 'book_covers/' . $coverImageName,  // Don't include 'storage/' here
+    'description' => $request->description,
+]);
 
+    return redirect()->route('admin.books.index')->with('success', 'Book added successfully.');
+}
     public function show(Book $book)
     {
         return view('books.show', compact('book'));
@@ -74,43 +78,52 @@ class BookController extends Controller
     }
 
     public function update(Request $request, Book $book)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'author' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'file' => 'nullable|file|mimes:pdf,epub,mobi|max:2048', // Validate file upload
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10000', // Validate cover image upload
+{
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'author' => 'required|string|max:255',
+        'category_id' => 'required|exists:categories,id',
+        'file' => 'nullable|file|mimes:pdf,epub,mobi|max:51200', // File is optional in update
+        'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10000', // Cover image optional
+        'description' => 'required|string',
+    ]);
 
-        ]);
+    $data = $request->only(['title', 'author', 'category_id']);
 
-        $data = $request->only(['title', 'author', 'category_id']);
-
-        if ($request->hasFile('file')) {
-            // Delete the old file if it exists
-            if ($book->file_path) {
-                Storage::delete($book->file_path);
-            }
-            $originalFileName = $request->file('file')->getClientOriginalName();
-
-            $filePath = $request->file('file')->storeAs('books', time() . '_' . $originalFileName);
-            $data['file_path'] = $filePath;
-            $data['file_name'] = $originalFileName;
-        }
-        if ($request->hasFile('cover_image')) {
-            // Delete the old cover image if it exists
-            if ($book->cover_image) {
-                Storage::delete($book->cover_image);
-            }
-            $coverImageName = time() . '_' . $request->file('cover_image')->getClientOriginalName();
-            $coverImagePath = $request->file('cover_image')->storeAs('book_covers', $coverImageName);
-            $data['cover_image'] = $coverImagePath;
+    // Handle file upload
+    if ($request->hasFile('file')) {
+        // Delete old file
+        if ($book->file_path) {
+            Storage::delete(str_replace('storage/', '', $book->file_path)); // Correct deletion
         }
 
-        $book->update($data);
+        // Store new file
+        $fileName = time() . '_' . $request->file('file')->getClientOriginalName();
+        $filePath = $request->file('file')->storeAs('books', $fileName, 'public');
 
-        return redirect()->route('admin.books.index')->with('success', 'Book updated successfully.');
+        $data['file_path'] = Storage::url($filePath); // Ensure correct public URL
+        $data['file_name'] = $fileName;
     }
+
+    // Handle cover image upload
+    if ($request->hasFile('cover_image')) {
+        // Delete old cover image
+        if ($book->cover_image) {
+            Storage::delete(str_replace('storage/', '', $book->cover_image)); // Correct deletion
+        }
+
+        // Store new cover image
+        $coverImageName = time() . '_' . $request->file('cover_image')->getClientOriginalName();
+        $coverImagePath = $request->file('cover_image')->storeAs('book_covers', $coverImageName, 'public');
+
+        $data['cover_image'] = 'book_covers/' . $coverImageName;// Ensure correct public URL
+    }
+
+    // Update the book record
+    $book->update($data);
+
+    return redirect()->route('admin.books.index')->with('success', 'Book updated successfully.');
+}
 
     public function destroy(Book $book)
     {

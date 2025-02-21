@@ -133,11 +133,17 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea name="description" class="form-control" id="description" rows="4" required>{{ $book->description }}</textarea>
+                </div>
+                <div class="form-group">
                     <label for="file">Current Book</label>
                     @if ($book->file_path)
                         <p>
-                         <a style="text-decoration:none" href="{{ asset('storage/' . $book->file_path) }}" target="_blank">
-                        {{ basename($book->file_path) }}
+                        <a style="text-decoration:none" href="{{ asset($book->file_path) }}" target="_blank">
+    {{ basename($book->file_path) }}
+</a>
+
                          </a>
                         </p>
                     @endif
@@ -150,7 +156,7 @@
                     <label for="cover_image">Current Cover Image</label>
                     @if ($book->cover_image)
                         <p>
-                        <img src="{{ asset('storage/book_covers/' . basename($book->cover_image)) }}" alt="{{ $book->title }}" class="img-thumbnail" width="100">
+                        <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="img-thumbnail" width="100">
                         </p>                        
                     @endif
                     <input type="file" name="cover_image" class="form-control" id="cover_image">

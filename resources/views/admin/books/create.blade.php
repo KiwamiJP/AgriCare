@@ -139,6 +139,10 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea name="description" class="form-control" id="description" required></textarea>
+                </div>
+                <div class="form-group">
                     <label for="file">Book File</label>
                     <input type="file" name="file" class="form-control" id="file" required>
                 </div>

@@ -98,7 +98,7 @@
                     </div><!-- /.container-fluid -->
                 </div>
                 <!-- /.content-header -->
-                <div class="container">
+<div class="container">
     <div class="row">
         <div class="col-md-12">
             <a href="{{ route('admin.posts.create') }}" class="btn btn-success mb-3">Create Post</a>
@@ -148,7 +148,7 @@
         </div>
         
     </div>
-    
+</div>
 </div>
 </div>
 </body>

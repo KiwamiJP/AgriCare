@@ -98,15 +98,15 @@
                     </div><!-- /.container-fluid -->
                 </div>
                 <!-- /.content-header -->
-                <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <a href="{{ route('admin.books.create') }}" class="btn btn-success mb-3">Upload Book</a>
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="{{ route('admin.books.create') }}" class="btn btn-success mb-3">Upload Book</a>
+                         @if (session('success'))
+                            <div class="alert alert-success">
+                         {{ session('success') }}
+                          </div>
+                        @endif
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Books</h3>

@@ -95,6 +95,173 @@
             </div>
         </div>
     </nav>
+    <div class="form-page">
+        <div class="container-fluid">
+        <div class="col-md-9">
+        <div class="col-md-9">
+    <div class="py-4 media">
+        <img src="https://greenwaymyanmar.com/img/farmer-icon.png" class="forum-post-user mr-3 img-fluid rounded-circle align-self-center">
+        <div class="media-body">
+            @auth
+                <div data-toggle="modal" data-target="#questionModal" class="forum-masked">သင့်ကိုယ်ပိုင်မေးခွန်းမေးပါ</div>
+            @else
+                <div data-toggle="modal" data-target="#loginModal" class="forum-masked">မေးခွန်းမေးရန် အကောင့်ဝင်ပါ။</div>
+            @endauth
+        </div>
+    </div>
+</div>
+
+<!-- Question Modal -->
+<div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="questionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="questionModalLabel">အသစ် ဆွေးနွေး / မေးမြန်းရန်</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="py-4 media">
+                    <img src="https://greenwaymyanmar.com/img/farmer-icon.png" class="forum-post-user mr-3 img-fluid rounded-circle">
+                    <div class="media-body">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="category">အမျိုးအစားရွေးချယ်ပါ</label>
+                                        <select id="category" class="form-control">
+                                            <option disabled="disabled" selected="selected">အမျိုးအစား</option>
+                                            <!-- Options will be added later from the database -->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="crop">သီးနှံရွေးချယ်ပါ</label>
+                                        <select id="crop" class="form-control">
+                                            <option selected="selected" disabled="disabled">သီးနှံ</option>
+                                            <!-- Options will be added later from the database -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea rows="5" placeholder="မိတ်ဆွေမေးချင်သော အကြောင်းအရာ ရိုက်ထည့်ပါ" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>ပုံတင်ရန်</label><br>
+    <div class="photo-upload-container">
+        <div class="custom-file">
+            <input type="file" multiple class="reply-photo-file custom-file-input" id="photoInput">
+            <label for="photoInput" class="photo-upload-square">
+                <i class="icon icon-md-add">+</i>
+            </label>
+        </div>
+    </div>
+</div>
+<br><br><br>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-success">တင်ရန်</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .photo-upload-square {
+        width: 120px;
+        height: 120px;
+        border: 2px dashed #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 10px;
+        transition: 0.3s;
+    }
+
+    .photo-upload-square:hover {
+        background-color: #f8f8f8;
+    }
+
+    .photo-upload-square i {
+        font-size: 32px;
+        color: #aaa;
+    }
+
+    .custom-file input {
+        display: none; /* Hide the default file input */
+    }
+</style>
+</div>
+
+<!-- Question Modal -->
+<div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="questionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="questionModalLabel">အသစ် ဆွေးနွေး / မေးမြန်းရန်</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="py-4 media">
+                    <img src="https://greenwaymyanmar.com/img/farmer-icon.png" class="forum-post-user mr-3 img-fluid rounded-circle">
+                    <div class="media-body">
+                        <div class="form-group">
+                            <label class="radio-inline"><input type="radio" name="q_type" checked="checked"> စိုက်ပျိုးရေး</label>
+                            <label class="radio-inline"><input type="radio" name="q_type"> မွေးမြူရေး</label>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="category">အမျိုးအစားရွေးချယ်ပါ</label>
+                                        <select id="category" class="form-control">
+                                            <option disabled="disabled" selected="selected">အမျိုးအစား</option>
+                                            <!-- Options will be added later from the database -->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="crop">သီးနှံရွေးချယ်ပါ</label>
+                                        <select id="crop" class="form-control">
+                                            <option selected="selected" disabled="disabled">သီးနှံ</option>
+                                            <!-- Options will be added later from the database -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea rows="5" placeholder="မိတ်ဆွေမေးချင်သော အကြောင်းအရာ ရိုက်ထည့်ပါ" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="forum-photo-upload upload-photo d-flex justify-content-start">
+                                <div class="custom-file">
+                                    <input type="file" multiple="multiple" class="reply-photo-file custom-file-input">
+                                    <label for="inputGroupFile01" class="custom-file-label"><i class="icon ion-md-add"></i></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary">တင်ရန်</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
