@@ -17,7 +17,7 @@ class BookController extends Controller
     if ($request->category && $request->category != 'all') {
         $query->where('category_id', $request->category);
     }
-    $books = $query->paginate(10);
+    $books = $query->paginate(8);
     $authors = Book::select('author')->distinct()->pluck('author'); // Get distinct authors from books
     $categories = Category::all();
     return view('books.index', compact('books', 'authors', 'categories'));
@@ -25,7 +25,7 @@ class BookController extends Controller
 }
     public function index()
     {
-        $books = Book::with('category')->paginate(10);
+        $books = Book::with('category')->paginate(8);
         return view('admin.books.index', compact('books'));
     }
 

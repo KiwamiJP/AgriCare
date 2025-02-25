@@ -18,40 +18,58 @@
             body {
                 font-family: 'Nunito', sans-serif;
             }
+            
+        .card-img-top {
+            width: 100%;
+            height: 200px; /* Set a fixed height */
+            object-fit: cover; /* Ensure the image covers the area without distortion */
+        }
+    
         </style>
     </head>
     <body class="antialiased">
         <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">AgriCare</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+        
+      </ul>
             <ul class="navbar-nav mr-auto">
-                @foreach(App\Models\Category::whereNull('parent_id')->get() as $parent)
-                 <li class="nav-item dropdown">
-                 <a class="nav-link dropdown-toggle ml-5" href="#" id="navbarDropdown{{ $parent->id }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ $parent->name }}
-                </a>
-                     @if($parent->children->isNotEmpty())
+            @foreach(App\Models\Category::whereNull('parent_id')->get() as $parent)
+            <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle ml-5" href="#" id="navbarDropdown{{ $parent->id }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ $parent->name }}
+            </a>
+            @if($parent->children->isNotEmpty())
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown{{ $parent->id }}">
                     @foreach($parent->children as $child)
                         <a class="dropdown-item" href="{{ route('categories.show', $child->id) }}">{{ $child->name }}</a>
                     @endforeach
                 </div>
-                    @endif
-                </li>
-                 @endforeach
-                </ul> 
-                <ul class="navbar-nav ml-auto">
+            @endif
+        </li>
+            @endforeach
+            <li class="nav-item">
+            <a class="nav-link ml-5" href="{{ route('books.index') }}">စာအုပ်စင်</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link ml-5" href="{{route('questions-and-answers')}}">အမေးအဖြေ</a>
+            </li>
+                </ul>    
+            <ul class="navbar-nav ml-auto">
                     @if (Route::has('login'))
                         @auth
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/home') }}">Home</a>
-                            </li>
                             
+                        @if (auth()->user()->hasRole('admin'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('admin.posts.index') }}">Dashboard</a>
+                                </li>
+                            @endif
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
@@ -74,8 +92,8 @@
                         @endauth
                     @endif
                 </ul>
+            </div>
         </div>
-    </div>
     </nav>
 @php
     // Remove the '/storage/' prefix so that Storage functions work correctly.
@@ -114,6 +132,7 @@
             </div>
             </div>
         </div>
+        
     </div>
 
 <!-- Scripts -->
