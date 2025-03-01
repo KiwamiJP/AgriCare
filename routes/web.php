@@ -6,6 +6,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\QuestionAnswerController;
+use App\Http\Controllers\CommentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,3 +42,4 @@ Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show')
 Route::get('/questions', [QuestionAnswerController::class, 'index'])->name('questions.index');
 Route::get('/questions-and-answers', [CategoryController::class, 'category'])->name('questions-and-answers');
 Route::post('/questions', [QuestionAnswerController::class, 'store'])->name('questions.store')->middleware('auth');
+Route::post('/comments', [CommentsController::class, 'store'])->name('comments.store');

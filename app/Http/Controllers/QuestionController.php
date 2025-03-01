@@ -1,6 +1,6 @@
 public function index(Request $request)
 {
-    $query = Question::with(['user', 'categories']);
+    $query = Question::with(['user', 'categories', 'comments.user']);
 
     if ($request->has('category')) {
         $selectedCategories = (array) $request->category;

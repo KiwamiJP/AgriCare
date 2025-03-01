@@ -219,6 +219,38 @@
                                             @endforeach
                                         </small>
                                     </div>
+
+                                    <!-- Comments section -->
+                                    <div class="mt-3 border-top pt-3">
+                                        @auth
+                                            <form action="{{ route('comments.store') }}" method="POST" class="mb-3">
+                                                @csrf
+                                                <input type="hidden" name="question_id" value="{{ $question->id }}">
+                                                <div class="form-group">
+                                                    <textarea name="comment" class="form-control" rows="2" placeholder="မှတ်ချက်ရေးရန်..." required></textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-sm btn-primary">မှတ်ချက်ပေးရန်</button>
+                                            </form>
+                                        @else
+                                            <p class="text-muted small">မှတ်ချက်ပေးရန် <a href="{{ route('login') }}">အကောင့်ဝင်ပါ</a></p>
+                                        @endauth
+                               <div class="comments-list">
+                                            @if($question->comments && count($question->comments) > 0)
+                                                @foreach($question->comments as $comment)
+                                                    <div class="d-flex mb-2">
+                                                        <img src="https://greenwaymyanmar.com/img/farmer-icon.png" class="rounded-circle mr-2" style="width: 24px; height: 24px;">
+                                                        <div class="bg-light p-2 rounded flex-grow-1">
+                                                            <div class="d-flex justify-content-between">
+                                                                <small class="font-weight-bold">{{ $comment->user->name }}</small>
+                                                                <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                                                            </div>
+                                                            <p class="mb-0 small">{{ $comment->comment }}</p>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         @endif

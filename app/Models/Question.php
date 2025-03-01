@@ -21,4 +21,9 @@ class Question extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'question_id', 'id');
+    }
 }
