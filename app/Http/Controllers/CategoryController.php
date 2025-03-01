@@ -17,9 +17,16 @@ class CategoryController extends Controller
     }public function category()
     {
         $categories = Category::all();
-        $questions = QuestionAnswer::with(['user', 'category'])
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+        $query = QuestionAnswer::with(['user', 'categories']);
+
+        if (request('category')) {
+            $selectedCategories = (array)request('category');
+            $query->whereHas('categories', function($q) use ($selectedCategories) {
+                $q->whereIn('categories.id', $selectedCategories);
+            });
+        }
+
+        $questions = $query->orderBy('question_answers.created_at', 'desc')->get();
         
         return view('questions-and-answers', compact('categories', 'questions'));
     }

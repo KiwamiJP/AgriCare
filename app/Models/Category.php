@@ -29,4 +29,9 @@ class Category extends Model
           return $this->belongsTo(Category::class, 'parent_id');
       }
       
+      public function questions()
+      {
+          return $this->belongsToMany(QuestionAnswer::class, 'question_category', 'category_id', 'question_answer_id');
+      }
+
 }

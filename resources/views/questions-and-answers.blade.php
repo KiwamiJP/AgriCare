@@ -119,53 +119,69 @@
             </div>
         </div>
     </nav>
-    <div class="col-md-3">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">ကဏ္ဍအလိုက်ကြည့်ရန်</h5>
-                </div>
-                <div class="card-body p-0">
-    <div class="list-group list-group-flush">
-        @foreach($categories as $category)
-            <div class="list-group-item">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" 
-                           class="custom-control-input category-filter" 
-                           id="category-{{ $category->id }}"
-                           value="{{ $category->id }}"
-                           {{ in_array($category->id, (array)request('category', [])) ? 'checked' : '' }}>
-                    <label class="custom-control-label d-flex justify-content-between align-items-center" 
-                           for="category-{{ $category->id }}">
-                        {{ $category->name }}
-                        <span class="badge badge-secondary badge-pill">
-                            {{ $category->questions_count }}
-                        </span>
-                    </label>
-                </div>
-            </div>
-        @endforeach
-    </div>
-</div>
-            </div>
-        </div>
-    <!-- Replace the container structure -->
-    <div class="form-page">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="py-4 media">
-                        <img src="https://greenwaymyanmar.com/img/farmer-icon.png" class="forum-post-user mr-3 img-fluid rounded-circle align-self-center" style="width: 40px; height: 40px;">
-                        <div class="media-body">
-                            @auth
-                                <div data-toggle="modal" data-target="#questionModal" class="forum-masked">သင့်ကိုယ်ပိုင်မေးခွန်းမေးပါ</div>
-                            @else
-                                <div data-toggle="modal" data-target="#loginModal" class="forum-masked">မေးခွန်းမေးရန် အကောင့်ဝင်ပါ။</div>
-                            @endauth
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Category Selection Sidebar -->
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">ကဏ္ဍအလိုက်ကြည့်ရန်</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            @foreach($categories->where('parent_id', 59) as $category)
+                                <div class="list-group-item">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" 
+                                               class="custom-control-input category-filter" 
+                                               id="category-{{ $category->id }}"
+                                               value="{{ $category->id }}"
+                                               {{ in_array($category->id, (array)request('category', [])) ? 'checked' : '' }}>
+                                        <label class="custom-control-label d-flex justify-content-between align-items-center" 
+                                               for="category-{{ $category->id }}">
+                                            {{ $category->name }}
+                                            <span class="badge badge-primary badge-pill">
+                                                {{ $category->questions()->count() }}
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-    
-                    <div class="questions-container mt-4">
-                        @forelse($questions as $question)
+                </div>
+            </div>
+
+            <!-- Questions Display Section -->
+            <div class="col-md-9">
+                <div class="py-4 media">
+                    <img src="https://greenwaymyanmar.com/img/farmer-icon.png" class="forum-post-user mr-3 img-fluid rounded-circle align-self-center" style="width: 40px; height: 40px;">
+                    <div class="media-body">
+                        @auth
+                            <div data-toggle="modal" data-target="#questionModal" class="forum-masked">သင့်ကိုယ်ပိုင်မေးခွန်းမေးပါ</div>
+                        @else
+                            <div data-toggle="modal" data-target="#loginModal" class="forum-masked">မေးခွန်းမေးရန် အကောင့်ဝင်ပါ။</div>
+                        @endauth
+                    </div>
+                </div>
+
+                <div class="questions-container mt-4">
+                    @if(request('category'))
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5>
+                                    ရွေးချယ်ထားသော ကဏ္ဍများ: 
+                                    @foreach($categories->whereIn('id', (array)request('category')) as $selectedCategory)
+                                        <span class="badge badge-primary">{{ $selectedCategory->name }}</span>
+                                    @endforeach
+                                </h5>
+                                <a href="{{ url()->current() }}" class="btn btn-sm btn-outline-secondary">အားလုံးပြန်ကြည့်ရန်</a>
+                            </div>
+                        </div>
+                    @endif
+                    
+                    @forelse($questions as $question)
+                        @if(!request('category') || $question->categories->whereIn('id', (array)request('category'))->count() > 0)
                             <div class="card mb-3">
                                 <div class="card-body py-3">
                                     <!-- User info section -->
@@ -181,7 +197,6 @@
                                     <p class="card-text mb-2">{{ $question->question }}</p>
                                     
                                     <!-- Photos display -->
-                                    <!-- Update the image click handler in the questions loop -->
                                     @if($question->photos && is_array($question->photos))
                                         <div class="row">
                                             @foreach($question->photos as $photo)
@@ -197,18 +212,25 @@
     
                                     <!-- Categories display -->
                                     <div class="mt-2">
-                                        <small class="text-muted">Categories: 
+                                        <small class="text-muted">
+                                            <i class="fas fa-tags"></i>
                                             @foreach($question->categories as $category)
-                                                {{ $category->name }}@if(!$loop->last), @endif
+                                                <span class="badge badge-light">{{ $category->name }}</span>
                                             @endforeach
                                         </small>
                                     </div>
                                 </div>
                             </div>
-                        @empty
-                            <div class="alert alert-info">No questions have been asked yet.</div>
-                        @endforelse
-                    </div>
+                        @endif
+                    @empty
+                        <div class="alert alert-info">
+                            @if(request('category'))
+                                ရွေးချယ်ထားသော ကဏ္ဍအတွက် မေးခွန်းများ မရှိသေးပါ။
+                            @else
+                                မေးခွန်းများ မရှိသေးပါ။
+                            @endif
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -255,7 +277,7 @@
                                         <div class="form-check">
                                             <input type="checkbox" name="category_id[]" 
                                                    class="form-check-input category-checkbox" 
-                                                   id="category{{ $category->id }}" 
+                                                   id="category{{ $category->id }}"
                                                    value="{{ $category->id }}">
                                             <label class="form-check-label py-1 px-2 rounded w-100" for="category{{ $category->id }}">
                                                 {{ $category->name }}

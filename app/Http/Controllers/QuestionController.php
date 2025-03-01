@@ -1,15 +1,21 @@
 public function index(Request $request)
 {
-    $questions = Question::with(['user', 'categories'])
-        ->when($request->category, function($query) use ($request) {
-            return $query->whereHas('categories', function($q) use ($request) {
-                $q->whereIn('categories.id', (array)$request->category);
-            });
-        })
-        ->latest()
-        ->get();
+    $query = Question::with(['user', 'categories']);
 
-    $categories = Category::withCount('questions')
+    if ($request->has('category')) {
+        $selectedCategories = (array) $request->category;
+        $query->whereHas('categories', function ($q) use ($selectedCategories) {
+            $q->whereIn('id', $selectedCategories);
+        }, '=', count($selectedCategories));
+    }
+
+    $questions = $query->latest()->get();
+
+    $categories = Category::withCount(['questions' => function ($query) {
+            $query->whereHas('categories', function ($q) {
+                $q->where('parent_id', 59);
+            });
+        }])
         ->where('parent_id', 59)
         ->get();
 
@@ -40,6 +46,7 @@ public function store(Request $request)
     $question->photos = !empty($photoNames) ? $photoNames : null;
     $question->save();
 
+    // Use question_category table
     $question->categories()->attach($request->category_id);
 
     return redirect()->back()->with('success', 'Question posted successfully!');
