@@ -24,8 +24,32 @@
             height: 200px; /* Set a fixed height */
             object-fit: cover; /* Ensure the image covers the area without distortion */
         }
-    
+        
         </style>
+        <script>
+    function previewPhotos(event) {
+        const container = document.getElementById("photo-upload-container");
+        container.innerHTML = ""; // Clear previous previews
+
+        Array.from(event.target.files).forEach(file => {
+            if (file.type.startsWith('image/')) { 
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.classList.add("preview-image");
+                    img.style.width = "100px"; // Set a fixed width
+                    img.style.height = "100px"; // Set a fixed height
+                    img.style.margin = "5px";
+                    img.style.borderRadius = "10px";
+                    container.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+</script>
+
     </head>
     <body class="antialiased">
         <!-- Navbar -->
@@ -95,21 +119,118 @@
             </div>
         </div>
     </nav>
-    <div class="form-page">
-        <div class="container-fluid">
-        <div class="col-md-9">
-        <div class="col-md-9">
-    <div class="py-4 media">
-        <img src="https://greenwaymyanmar.com/img/farmer-icon.png" class="forum-post-user mr-3 img-fluid rounded-circle align-self-center">
-        <div class="media-body">
-            @auth
-                <div data-toggle="modal" data-target="#questionModal" class="forum-masked">သင့်ကိုယ်ပိုင်မေးခွန်းမေးပါ</div>
-            @else
-                <div data-toggle="modal" data-target="#loginModal" class="forum-masked">မေးခွန်းမေးရန် အကောင့်ဝင်ပါ။</div>
-            @endauth
-        </div>
+    <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">ကဏ္ဍအလိုက်ကြည့်ရန်</h5>
+                </div>
+                <div class="card-body p-0">
+    <div class="list-group list-group-flush">
+        @foreach($categories as $category)
+            <div class="list-group-item">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" 
+                           class="custom-control-input category-filter" 
+                           id="category-{{ $category->id }}"
+                           value="{{ $category->id }}"
+                           {{ in_array($category->id, (array)request('category', [])) ? 'checked' : '' }}>
+                    <label class="custom-control-label d-flex justify-content-between align-items-center" 
+                           for="category-{{ $category->id }}">
+                        {{ $category->name }}
+                        <span class="badge badge-secondary badge-pill">
+                            {{ $category->questions_count }}
+                        </span>
+                    </label>
+                </div>
+            </div>
+        @endforeach
     </div>
 </div>
+            </div>
+        </div>
+    <!-- Replace the container structure -->
+    <div class="form-page">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="py-4 media">
+                        <img src="https://greenwaymyanmar.com/img/farmer-icon.png" class="forum-post-user mr-3 img-fluid rounded-circle align-self-center" style="width: 40px; height: 40px;">
+                        <div class="media-body">
+                            @auth
+                                <div data-toggle="modal" data-target="#questionModal" class="forum-masked">သင့်ကိုယ်ပိုင်မေးခွန်းမေးပါ</div>
+                            @else
+                                <div data-toggle="modal" data-target="#loginModal" class="forum-masked">မေးခွန်းမေးရန် အကောင့်ဝင်ပါ။</div>
+                            @endauth
+                        </div>
+                    </div>
+    
+                    <div class="questions-container mt-4">
+                        @forelse($questions as $question)
+                            <div class="card mb-3">
+                                <div class="card-body py-3">
+                                    <!-- User info section -->
+                                    <div class="d-flex align-items-center mb-2">
+                                        <img src="https://greenwaymyanmar.com/img/farmer-icon.png" class="rounded-circle mr-2" style="width: 32px; height: 32px;">
+                                        <div>
+                                            <h6 class="mb-0 small">{{ $question->user->name }}</h6>
+                                            <small class="text-muted">{{ $question->created_at->diffForHumans() }}</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Question content -->
+                                    <p class="card-text mb-2">{{ $question->question }}</p>
+                                    
+                                    <!-- Photos display -->
+                                    <!-- Update the image click handler in the questions loop -->
+                                    @if($question->photos && is_array($question->photos))
+                                        <div class="row">
+                                            @foreach($question->photos as $photo)
+                                                <div class="col-4 col-md-3 mb-2">
+                                                    <img src="{{ Storage::url('questions/' . $photo) }}" 
+                                                         class="img-fluid rounded question-photo" 
+                                                         style="width: 100%; height: 120px; object-fit: cover; cursor: pointer;"
+                                                         onclick="showFullImage('{{ Storage::url('questions/' . $photo) }}')">
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
+    
+                                    <!-- Categories display -->
+                                    <div class="mt-2">
+                                        <small class="text-muted">Categories: 
+                                            @foreach($question->categories as $category)
+                                                {{ $category->name }}@if(!$loop->last), @endif
+                                            @endforeach
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="alert alert-info">No questions have been asked yet.</div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<!-- Add these styles -->
+<style>
+    .card {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .forum-masked {
+        cursor: pointer;
+        padding: 10px;
+        border: 1px dashed #ddd;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+    }
+    .forum-masked:hover {
+        background-color: #e9ecef;
+    }
+</style>
 
 <!-- Question Modal -->
 <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="questionModalLabel" aria-hidden="true">
@@ -121,150 +242,456 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="py-4 media">
-                    <img src="https://greenwaymyanmar.com/img/farmer-icon.png" class="forum-post-user mr-3 img-fluid rounded-circle">
-                    <div class="media-body">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="category">အမျိုးအစားရွေးချယ်ပါ</label>
-                                        <select id="category" class="form-control">
-                                            <option disabled="disabled" selected="selected">အမျိုးအစား</option>
-                                            <!-- Options will be added later from the database -->
-                                        </select>
+            <div class="modal-body" style="padding-bottom: 80px;">
+                <form action="{{ route('questions.store') }}" method="POST" enctype="multipart/form-data" id="questionForm">
+                    @csrf
+                    <!-- Update the category checkboxes section -->
+                    <div class="form-group">
+                        <label>အမျိုးအစားရွေးချင်သော အကြောင်းအရာ ရိုက်ထည့်ပါ <span class="text-danger">*</span></label>
+                        <div class="category-checkboxes p-2 border rounded bg-light">
+                            <div class="row g-2">
+                                @foreach ($categories->where('parent_id', 59) as $category)
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="category_id[]" 
+                                                   class="form-check-input category-checkbox" 
+                                                   id="category{{ $category->id }}" 
+                                                   value="{{ $category->id }}">
+                                            <label class="form-check-label py-1 px-2 rounded w-100" for="category{{ $category->id }}">
+                                                {{ $category->name }}
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="crop">သီးနှံရွေးချယ်ပါ</label>
-                                        <select id="crop" class="form-control">
-                                            <option selected="selected" disabled="disabled">သီးနှံ</option>
-                                            <!-- Options will be added later from the database -->
-                                        </select>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
-                        <div class="form-group">
-                            <textarea rows="5" placeholder="မိတ်ဆွေမေးချင်သော အကြောင်းအရာ ရိုက်ထည့်ပါ" class="form-control"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>ပုံတင်ရန်</label><br>
-    <div class="photo-upload-container">
-        <div class="custom-file">
-            <input type="file" multiple class="reply-photo-file custom-file-input" id="photoInput">
-            <label for="photoInput" class="photo-upload-square">
-                <i class="icon icon-md-add">+</i>
-            </label>
-        </div>
-    </div>
-</div>
-<br><br><br>
-                        <div class="form-group">
-                            <button type="button" class="btn btn-success">တင်ရန်</button>
+                        <div class="invalid-feedback" id="categoryError" style="display: none;">
+                            အနည်းဆုံး အမျိုးအစားတစ်ခု ရွေးချယ်ပါ။
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
+
+                    <div class="form-group">
+                        <textarea name="question" rows="5" placeholder="မိတ်ဆွေမေးချင်သော အကြောင်းအရာ ရိုက်ထည့်ပါ" class="form-control" required></textarea>
+                    </div>
+
+                    <!-- Replace the photo upload section and its related JavaScript -->
+                    <div class="form-group">
+    <label>ပုံတင်ရန် (တစ်ပုံချင်းစီရွေးပါ)</label>
+    <div class="custom-file mb-2">
+        <input type="file" name="photos[]" multiple accept="image/*" class="custom-file-input" id="photoInput">
+        <label class="custom-file-label" for="photoInput">ပုံရွေးရန်</label>
     </div>
+    <div id="photo-upload-container" class="d-flex flex-wrap mt-2 p-3"></div>
 </div>
 
 <style>
-    .photo-upload-square {
-        width: 120px;
-        height: 120px;
-        border: 2px dashed #ccc;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    #photo-upload-container {
+        min-height: 100px;
+        border: 2px dashed #ddd;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        padding: 10px;
+    }
+    .preview-wrapper {
+        position: relative;
+        margin: 5px;
+    }
+    .preview-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    .remove-btn {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #dc3545;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        line-height: 20px;
         cursor: pointer;
-        border-radius: 10px;
-        transition: 0.3s;
-    }
-
-    .photo-upload-square:hover {
-        background-color: #f8f8f8;
-    }
-
-    .photo-upload-square i {
-        font-size: 32px;
-        color: #aaa;
-    }
-
-    .custom-file input {
-        display: none; /* Hide the default file input */
+        font-size: 14px;
     }
 </style>
-</div>
 
-<!-- Question Modal -->
-<div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="questionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="questionModalLabel">အသစ် ဆွေးနွေး / မေးမြန်းရန်</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const categoryFilters = document.querySelectorAll('.category-filter');
+    
+    categoryFilters.forEach(filter => {
+        filter.addEventListener('change', function() {
+            const selectedCategories = Array.from(categoryFilters)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+            
+            const url = new URL(window.location.href);
+            url.searchParams.delete('category[]');
+            
+            if (selectedCategories.length > 0) {
+                selectedCategories.forEach(category => {
+                    url.searchParams.append('category[]', category);
+                });
+            }
+            
+            window.location.href = url.toString();
+        });
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const photoInput = document.getElementById('photoInput');
+    const container = document.getElementById('photo-upload-container');
+    const form = document.getElementById('questionForm');
+    let selectedFiles = [];
+
+    photoInput.addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        files.forEach(file => {
+            if (file.type.startsWith('image/')) {
+                selectedFiles.push(file);
+            }
+        });
+        displayPhotos();
+    });
+
+    function displayPhotos() {
+        container.innerHTML = '';
+        const dt = new DataTransfer();
+        
+        selectedFiles.forEach((file, index) => {
+            dt.items.add(file);
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'preview-wrapper';
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'preview-image';
+
+                const removeBtn = document.createElement('div');
+                removeBtn.className = 'remove-btn';
+                removeBtn.innerHTML = '×';
+                removeBtn.onclick = (e) => {
+                    e.preventDefault();
+                    selectedFiles.splice(index, 1);
+                    displayPhotos();
+                };
+
+                wrapper.appendChild(img);
+                wrapper.appendChild(removeBtn);
+                container.appendChild(wrapper);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        photoInput.files = dt.files;
+        const label = document.querySelector('.custom-file-label');
+        label.textContent = selectedFiles.length > 0 ? `${selectedFiles.length} ပုံရွေးချယ်ပြီး` : 'ပုံရွေးရန်';
+    }
+
+    form.addEventListener('submit', function(e) {
+        if (selectedFiles.length > 0) {
+            const dt = new DataTransfer();
+            selectedFiles.forEach(file => dt.items.add(file));
+            photoInput.files = dt.files;
+        }
+    });
+});
+</script>
+
+                    <!-- Update the JavaScript for lightbox -->
+                    <script>
+                        function showFullImage(imgSrc) {
+                            const lightbox = document.getElementById('lightbox');
+                            const lightboxImg = document.getElementById('lightbox-img');
+                            const closeLightbox = document.querySelector('.close-lightbox');
+
+                            // Initialize for all question photos
+                            document.querySelectorAll('.question-photo').forEach(photo => {
+                                photo.onclick = function() {
+                                    lightboxImg.src = this.src;
+                                    lightbox.style.display = 'block';
+                                };
+                            });
+
+                            // Close lightbox when clicking outside image
+                            lightbox.onclick = function(e) {
+                                if (e.target !== lightboxImg) {
+                                    lightbox.style.display = 'none';
+                                }
+                            };
+
+                            // Close on X button click
+                            closeLightbox.onclick = function() {
+                                lightbox.style.display = 'none';
+                            };
+
+                            // Close on ESC key
+                            document.addEventListener('keydown', function(e) {
+                                if (e.key === 'Escape') {
+                                    lightbox.style.display = 'none';
+                                }
+                            });
+                        };
+                    
+
+                    // Close on ESC key
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'Escape') {
+                            document.getElementById('lightbox').style.display = 'none';
+                        }
+                    });
+
+                    // Initialize for all question photos
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const photos = document.querySelectorAll('.question-photo');
+                        photos.forEach(photo => {
+                            photo.onclick = function() {
+                                showFullImage(this.src);
+                            };
+                        });
+                    });
+                    </script>
+                    <!-- Replace the JavaScript section -->
+                    <script>
+                         document.getElementById('questionForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent form submission initially
+        
+        const checkboxes = document.querySelectorAll('.category-checkbox');
+        const errorDiv = document.getElementById('categoryError');
+        const categoryBox = document.querySelector('.category-checkboxes');
+        
+        // Check if any checkbox is selected
+        const isAnyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+        
+        if (!isAnyChecked) {
+            errorDiv.style.display = 'block';
+            categoryBox.style.borderColor = '#dc3545';
+            return false; // Stop form submission
+        }
+        
+        // If validation passes, submit the form
+        this.submit();
+    });
+
+    // Reset error state when a checkbox is checked
+    document.querySelectorAll('.category-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const errorDiv = document.getElementById('categoryError');
+            const categoryBox = document.querySelector('.category-checkboxes');
+            if (this.checked) {
+                errorDiv.style.display = 'none';
+                categoryBox.style.borderColor = '#ddd';
+            }
+        });
+    });
+                        function previewPhotos(event) {
+                            const container = document.getElementById("photo-upload-container");
+                            const files = event.target.files;
+                            container.innerHTML = "";
+                    
+                            Array.from(files).forEach((file, index) => {
+                                if (file.type.startsWith('image/')) {
+                                    const reader = new FileReader();
+                                    reader.onload = function(e) {
+                                        const imageContainer = document.createElement("div");
+                                        imageContainer.className = "preview-image-container";
+                                        
+                                        const img = document.createElement("img");
+                                        img.src = e.target.result;
+                                        img.className = "preview-image";
+                                        
+                                        const removeButton = document.createElement("div");
+                                        removeButton.className = "remove-image";
+                                        removeButton.innerHTML = "×";
+                                        removeButton.onclick = function() {
+                                            imageContainer.remove();
+                                            updateFileList(index);
+                                        };
+                                        
+                                        imageContainer.appendChild(img);
+                                        imageContainer.appendChild(removeButton);
+                                        container.appendChild(imageContainer);
+                                    };
+                                    reader.readAsDataURL(file);
+                                }
+                            });
+                    
+                            updateLabel(files.length);
+                        }
+                    
+                        function updateFileList(removedIndex) {
+                            const input = document.getElementById('photoInput');
+                            const dt = new DataTransfer();
+                            const { files } = input;
+                    
+                            for(let i = 0; i < files.length; i++) {
+                                if(i !== removedIndex) {
+                                    dt.items.add(files[i]);
+                                }
+                            }
+                    
+                            input.files = dt.files;
+                            updateLabel(input.files.length);
+                        }
+                    
+                        function updateLabel(count) {
+                            const label = document.querySelector('.custom-file-label');
+                            label.textContent = count > 0 ? `${count} ပုံရွေးချယ်ပြီး` : 'ပုံရွေးရန်';
+                        }
+                    </script>
+                    <!-- Replace the JavaScript section -->
+                    <script>
+                        function previewPhotos(event) {
+                            const container = document.getElementById("photo-upload-container");
+                            const files = event.target.files;
+                            container.innerHTML = "";
+                    
+                            Array.from(files).forEach((file, index) => {
+                                if (file.type.startsWith('image/')) {
+                                    const reader = new FileReader();
+                                    reader.onload = function(e) {
+                                        const imageContainer = document.createElement("div");
+                                        imageContainer.className = "preview-image-container";
+                                        
+                                        const img = document.createElement("img");
+                                        img.src = e.target.result;
+                                        img.className = "preview-image";
+                                        
+                                        const removeButton = document.createElement("div");
+                                        removeButton.className = "remove-image";
+                                        removeButton.innerHTML = "×";
+                                        removeButton.onclick = function() {
+                                            imageContainer.remove();
+                                            updateFileList(index);
+                                        };
+                                        
+                                        imageContainer.appendChild(img);
+                                        imageContainer.appendChild(removeButton);
+                                        container.appendChild(imageContainer);
+                                    };
+                                    reader.readAsDataURL(file);
+                                }
+                            });
+                    
+                            updateLabel(files.length);
+                        }
+                    
+                        function updateFileList(removedIndex) {
+                            const input = document.getElementById('photoInput');
+                            const dt = new DataTransfer();
+                            const { files } = input;
+                    
+                            for(let i = 0; i < files.length; i++) {
+                                if(i !== removedIndex) {
+                                    dt.items.add(files[i]);
+                                }
+                            }
+                    
+                            input.files = dt.files;
+                            updateLabel(input.files.length);
+                        }
+                    
+                        function updateLabel(count) {
+                            const label = document.querySelector('.custom-file-label');
+                            label.textContent = count > 0 ? `${count} ပုံရွေးချယ်ပြီး` : 'ပုံရွေးရန်';
+                        }
+                    </script>
+                    <div class="text-right mt-4" style="position: absolute; bottom: 0; right: 0; padding: 20px; z-index: 1000;">
+                        <button type="submit" class="btn btn-success">တင်ရန်</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Update the modal structure (place it before the scripts) -->
+    <!-- Update the photo viewer modal structure -->
+    
+</div>
+<!-- Photo Viewer Modal -->
+<div class="modal fade" id="photoViewerModal" tabindex="-1" role="dialog" aria-labelledby="photoViewerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-header border-0">
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="py-4 media">
-                    <img src="https://greenwaymyanmar.com/img/farmer-icon.png" class="forum-post-user mr-3 img-fluid rounded-circle">
-                    <div class="media-body">
-                        <div class="form-group">
-                            <label class="radio-inline"><input type="radio" name="q_type" checked="checked"> စိုက်ပျိုးရေး</label>
-                            <label class="radio-inline"><input type="radio" name="q_type"> မွေးမြူရေး</label>
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="category">အမျိုးအစားရွေးချယ်ပါ</label>
-                                        <select id="category" class="form-control">
-                                            <option disabled="disabled" selected="selected">အမျိုးအစား</option>
-                                            <!-- Options will be added later from the database -->
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="crop">သီးနှံရွေးချယ်ပါ</label>
-                                        <select id="crop" class="form-control">
-                                            <option selected="selected" disabled="disabled">သီးနှံ</option>
-                                            <!-- Options will be added later from the database -->
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea rows="5" placeholder="မိတ်ဆွေမေးချင်သော အကြောင်းအရာ ရိုက်ထည့်ပါ" class="form-control"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <div class="forum-photo-upload upload-photo d-flex justify-content-start">
-                                <div class="custom-file">
-                                    <input type="file" multiple="multiple" class="reply-photo-file custom-file-input">
-                                    <label for="inputGroupFile01" class="custom-file-label"><i class="icon ion-md-add"></i></label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <button type="button" class="btn btn-primary">တင်ရန်</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="modal-body text-center p-0">
+                <img id="enlargedPhoto" class="img-fluid" src="" alt="Enlarged photo">
             </div>
         </div>
     </div>
 </div>
-        </div>
-    </div>
+
+<!-- Add this to your existing styles -->
+<style>
+    .question-photo {
+        cursor: pointer;
+        transition: opacity 0.3s;
+    }
+    .question-photo:hover {
+        opacity: 0.8;
+    }
+    #photoViewerModal .modal-dialog {
+        max-width: 90vw;
+    }
+    #photoViewerModal .close {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        z-index: 1050;
+        font-size: 30px;
+        color: white;
+        opacity: 1;
+    }
+    #enlargedPhoto {
+        max-height: 100vh;
+        width: 120vh;
+        margin: auto;
+    }
+</style>
+
+<!-- Update your JavaScript -->
+<script>
+    function showFullImage(imgSrc) {
+        $('#enlargedPhoto').attr('src', imgSrc);
+        $('#photoViewerModal').modal('show');
+    }
+</script>
+
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    </body>
+
+    <script>
+        function showFullImage(imgSrc) {
+            $('#enlargedPhoto').attr('src', imgSrc);
+            $('#photoViewerModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        }
+
+        $(document).ready(function() {
+            // Initialize photo viewer for all images
+            $('.questions-container img.img-fluid').each(function() {
+                $(this).addClass('question-photo');
+                $(this).on('click', function() {
+                    var imgSrc = $(this).attr('src');
+                    $('#enlargedPhoto').attr('src', imgSrc);
+                    $('#photoViewerModal').modal({
+                        backdrop: true,
+                        keyboard: true
+                    });
+                });
+            });
+        });
+    </script>
+</body>
 </html>

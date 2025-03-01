@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\QuestionAnswerController;
 
 /*
@@ -28,6 +29,7 @@ Route::get('/home', function () {
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('posts', PostController::class);
     Route::resource('books', BookController::class);
+    Route::resource('users', UserController::class);
 });
 
 //Detail view route
@@ -36,5 +38,6 @@ Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show')
 Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
 Route::get('/books', [BookController::class, 'publicIndex'])->name('books.index');
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
-Route::get('/questions-and-answers', [QuestionAnswerController::class, 'index'])->name('questions-and-answers');
-
+Route::get('/questions', [QuestionAnswerController::class, 'index'])->name('questions.index');
+Route::get('/questions-and-answers', [CategoryController::class, 'category'])->name('questions-and-answers');
+Route::post('/questions', [QuestionAnswerController::class, 'store'])->name('questions.store')->middleware('auth');
