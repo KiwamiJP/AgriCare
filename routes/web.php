@@ -26,17 +26,18 @@ Auth::routes();
 Route::get('/home', function () {
     return redirect('/');
 })->name('home');
+
 // Admin routes
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'check.role:admin,agronomist']], function () {
     Route::resource('posts', PostController::class);
     Route::resource('books', BookController::class);
     Route::resource('users', UserController::class);
 });
 
-//Detail view route
+// Public routes
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
-//Category view route
 Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
+Route::resource('categories', CategoryController::class);
 Route::get('/books', [BookController::class, 'publicIndex'])->name('books.index');
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
 Route::get('/questions', [QuestionAnswerController::class, 'index'])->name('questions.index');

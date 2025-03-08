@@ -116,11 +116,7 @@
             <label for="email">Email</label>
             <input type="email" name="email" id="email" class="form-control" value="{{ $user->email }}" required>
         </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" class="form-control">
-            <small class="form-text text-muted">Leave blank to keep the current password.</small>
-        </div>
+        
         <div class="form-group">
             <label for="role">Role</label>
             <select name="role" id="role" class="form-control" required>

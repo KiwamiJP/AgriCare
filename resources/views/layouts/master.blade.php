@@ -77,12 +77,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <p>Books</p>
         </a>
     </li>
+    @if(auth()->user()->hasRole('admin'))
     <li class="nav-item">
         <a href="/admin/users" class="nav-link {{ Request::is('admin/users*') ? 'active' : '' }}">
             <i class="fa fa-user nav-icon"></i>
             <p>Users</p>
         </a>
     </li>
+    @endif
 </ul>
           </li>
           

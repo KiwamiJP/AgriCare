@@ -17,6 +17,8 @@
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
+                background-color:#FEFCE8;
+
             }
             
         .card-img-top {
@@ -29,9 +31,12 @@
     </head>
     <body class="antialiased">
         <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-dark text-white sticky-top" style="background-color:#22C55D !important">
         <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">AgriCare</a>
+            <div class="d-flex align-items-center">
+                <img src="https://burmese-agriculture.vercel.app/logo.png" alt="Logo" style="width:50px;height:50px;margin-right:10px">
+                <a class="navbar-brand text-light" href="{{ url('/') }}">AgriCare</a>
+            </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -42,7 +47,7 @@
             <ul class="navbar-nav mr-auto">
             @foreach(App\Models\Category::whereNull('parent_id')->get() as $parent)
             <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle ml-5" href="#" id="navbarDropdown{{ $parent->id }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle ml-5 text-light" href="#" id="navbarDropdown{{ $parent->id }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ $parent->name }}
             </a>
             @if($parent->children->isNotEmpty())
@@ -55,23 +60,23 @@
         </li>
             @endforeach
             <li class="nav-item">
-            <a class="nav-link ml-5" href="{{ route('books.index') }}">စာအုပ်စင်</a>
+            <a class="nav-link ml-5 text-light" href="{{ route('books.index') }}">စာအုပ်စင်</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link ml-5" href="{{route('questions-and-answers')}}">အမေးအဖြေ</a>
+                <a class="nav-link ml-5 text-light" href="{{route('questions-and-answers')}}">အမေးအဖြေ</a>
             </li>
                 </ul>    
             <ul class="navbar-nav ml-auto">
                     @if (Route::has('login'))
                         @auth
                             
-                        @if (auth()->user()->hasRole('admin'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.posts.index') }}">Dashboard</a>
-                                </li>
-                            @endif
+                        @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('agronomist'))
+        <li class="nav-item">
+            <a class="nav-link text-light" href="{{ route('admin.posts.index') }}">Dashboard</a>
+        </li>
+    @endif
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('logout') }}"
+                                <a class="nav-link text-light" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
@@ -94,7 +99,16 @@
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav>  
+        <!-- End Navbar -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">စာအုပ်စင်</h3>
+                        </div>
+                        <div class="card-body">
     <div class="container mt-5">
    
         <div class="col-md-9">

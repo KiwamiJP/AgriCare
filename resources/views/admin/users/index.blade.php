@@ -102,15 +102,72 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-      
-    <a href="{{ route('admin.users.create') }}" class="btn btn-success mb-3">Create User</a>
-    <table class="table table-bordered">
+        <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <!-- Replace the small boxes section -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ $totalUsers }}</h3>
+                        <p>Total Users</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ $totalAgronomists }}</h3>
+                        <p>Total Agronomists</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-stalker"></i>
+                    </div></div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{ $totalPosts }}</h3>
+                        <p>Knowledge Share Posts</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-document-text"></i>
+                    </div>
+                    </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{ $totalQuestions }}</h3>
+                        <p>Questions & Answers</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-help-circled"></i>
+                    </div>
+                    </div>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+        
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <div class="card">
+    <div class="card-header">
+                    <h3 class="card-title">Users</h3>
+                </div>
+                <div class="card-body">
+                <table class="table table-bordered">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Password</th>
                 <th>Role</th>
                 <th>Actions</th>
             </tr>
@@ -121,7 +178,6 @@
                     <td>{{ $user->id }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
-                    <td>{{ $user->password }}</td>
                     <td>{{ $user->role }}</td>
                     <td>
                         <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-primary btn-sm">Edit</a>
@@ -138,6 +194,8 @@
             @endforeach
         </tbody>
     </table>
+    </div>
+            </div>
     <div class="d-flex justify-content-center">
         {{ $users->links() }} <!-- Display pagination links -->
     </div>

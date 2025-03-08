@@ -4,15 +4,24 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Post;
+use App\Models\Question;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\QuestionController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\Models\QuestionAnswer;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::paginate(10); // Use pagination
-        return view('admin.users.index', compact('users'));
+        $users = User::paginate(10);
+        $totalUsers = User::where('role', 'user')->count();
+        $totalAgronomists = User::where('role', 'agronomist')->count();
+        $totalPosts = Post::count();
+        $totalQuestions = QuestionAnswer::count();
+    
+        return view('admin.users.index', compact('users', 'totalUsers', 'totalAgronomists', 'totalPosts', 'totalQuestions'));
     }
 
     public function create()
