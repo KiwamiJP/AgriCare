@@ -62,6 +62,10 @@
                                 </li>
                             @endif
                         @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="/home">Home</a>
+
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -113,6 +117,15 @@
             <h3 class="card-title">Edit Book</h3>
         </div>
         <div class="card-body">
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
             <form action="{{ route('admin.books.update', $book->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -148,9 +161,7 @@
                         </p>
                     @endif
                     <input type="file" name="file" class="form-control" id="file">
-                    @error('file')
-            <div class="alert alert-danger mt-2">{{ $message }}</div>
-        @enderror
+                    
                 </div>
                 <div class="form-group">
                     <label for="cover_image">Current Cover Image</label>
@@ -160,9 +171,7 @@
                         </p>                        
                     @endif
                     <input type="file" name="cover_image" class="form-control" id="cover_image">
-                    @error('cover_image')
-                        <div class="alert alert-danger mt-2">{{ $message }}</div>
-                    @enderror
+                    
                 </div>
                 <button type="submit" class="btn btn-primary">Update Book</button>
             </form>

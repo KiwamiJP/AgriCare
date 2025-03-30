@@ -28,24 +28,34 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'content' => 'required',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'category_id' => 'nullable|exists:categories,id',
-        ]);
-
-        $data = $request->all();
-
-        if ($request->hasFile('photo')) {
-            $imageName = time().'.'.$request->photo->extension();
-            $request->photo->move(public_path('images'), $imageName);
-            $data['photo'] = $imageName;
+        try {
+            $validator = $request->validate([
+                'title' => 'required',
+                'content' => 'required',
+                'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+                'category_id' => 'nullable|exists:categories,id',
+            ], [
+                'photo.max' => 'ဓာတ်ပုံဖိုင်သည် 2MB ထက်မကြီးသင့်ပါ။',
+                'photo.mimes' => 'ဖိုင်အမျိုးအစားသည် jpeg, png, jpg, gif, svg, webp ဖြစ်ရမည်။',
+                'photo.image' => 'ဖိုင်အမျိုးအစားသည် ပုံဖိုင်ဖြစ်ရမည်။',
+            ]);
+        
+            $data = $request->all();
+        
+            if ($request->hasFile('photo')) {
+                $imageName = time().'.'.$request->photo->extension();
+                $request->photo->move(public_path('images'), $imageName);
+                $data['photo'] = $imageName;
+            }
+        
+            Post::create($data);
+        
+            return redirect()->route('admin.posts.index')->with('success', 'Post created successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput();
         }
-
-        Post::create($data);
-
-        return redirect()->route('admin.posts.index')->with('success', 'Post created successfully.');
     }
 
     public function edit(Post $post)
@@ -56,30 +66,40 @@ class PostController extends Controller
 
     public function update(Request $request, Post $post)
     {
-        $request->validate([
-            'title' => 'required',
-            'content' => 'required',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'category_id' => 'nullable|exists:categories,id',
-        ]);
-
-        $data = $request->all();
-
-        if ($request->hasFile('photo')) {
-            if ($post->photo && file_exists(public_path('images/' . $post->photo))) {
-                unlink(public_path('images/' . $post->photo));
+        try {
+            $validator = $request->validate([
+                'title' => 'required',
+                'content' => 'required',
+                'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+                'category_id' => 'nullable|exists:categories,id',
+            ], [
+                'photo.max' => 'ဓာတ်ပုံဖိုင်သည် 2MB ထက်မကြီးသင့်ပါ။',
+                'photo.mimes' => 'ဖိုင်အမျိုးအစားသည် jpeg, png, jpg, gif, svg, webp ဖြစ်ရမည်။',
+                'photo.image' => 'ဖိုင်အမျိုးအစားသည် ပုံဖိုင်ဖြစ်ရမည်။',
+            ]);
+        
+            $data = $request->all();
+        
+            if ($request->hasFile('photo')) {
+                if ($post->photo && file_exists(public_path('images/' . $post->photo))) {
+                    unlink(public_path('images/' . $post->photo));
+                }
+        
+                $imageName = time().'.'.$request->photo->extension();
+                $request->photo->move(public_path('images'), $imageName);
+                $data['photo'] = $imageName;
+            } else {
+                unset($data['photo']);
             }
-
-            $imageName = time().'.'.$request->photo->extension();
-            $request->photo->move(public_path('images'), $imageName);
-            $data['photo'] = $imageName;
-        } else {
-            unset($data['photo']);
+        
+            $post->update($data);
+        
+            return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput();
         }
-
-        $post->update($data);
-
-        return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully.');
     }
 
     public function destroy(Post $post)

@@ -120,7 +120,7 @@
         <div class="form-group">
             <label for="role">Role</label>
             <select name="role" id="role" class="form-control" required>
-                <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>User</option>
+                <option value="farmer" {{ $user->role == 'farmer' ? 'selected' : '' }}>Farmer</option>
                 <option value="agronomist" {{ $user->role == 'agronomist' ? 'selected' : '' }}>Agronomist</option>
                 
             </select>

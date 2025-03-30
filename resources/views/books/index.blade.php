@@ -3,7 +3,10 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<!-- Multiple favicon sizes -->
+<link rel="icon" type="image/png" sizes="32x32" href="https://burmese-agriculture.vercel.app/logo.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="https://burmese-agriculture.vercel.app/logo.png">
+        <link rel="apple-touch-icon" href="https://burmese-agriculture.vercel.app/logo.png">
         <title>AgriCare</title>
 
         <!-- Fonts -->
@@ -17,7 +20,7 @@
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
-                background-color:#FEFCE8;
+                background-color:#F0F7E9;
 
             }
             
@@ -26,6 +29,29 @@
             height: 200px; /* Set a fixed height */
             object-fit: cover; /* Ensure the image covers the area without distortion */
         }
+        .dropdown-item:hover {
+                background-color: #f0fdf4;
+                color: #22C55D;
+            }
+            .navbar {
+                box-shadow: 0 2px 10px rgba(34, 197, 94, 0.15);
+            }
+
+            .navbar-brand {
+                font-weight: 600;
+                font-size: 1.5rem;
+            }
+
+            .dropdown-menu {
+                border-radius: 12px;
+                border: none;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .dropdown-item {
+                padding: 0.75rem 1.5rem;
+                transition: all 0.2s ease;
+            }
     
         </style>
     </head>
@@ -111,8 +137,8 @@
                         <div class="card-body">
     <div class="container mt-5">
    
-        <div class="col-md-9">
-            <div class="d-flex">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center">
                 <form class="my-4 mr-2 form-inline" action="{{ route('books.index') }}" method="GET">
                     @csrf
                     <label class="my-1 mr-4" for="author">စာရေးဆရာ</label>

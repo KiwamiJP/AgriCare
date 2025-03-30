@@ -5,7 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>AgriCare</title>
-
+ <!-- Multiple favicon sizes -->
+ <link rel="icon" type="image/png" sizes="32x32" href="https://burmese-agriculture.vercel.app/logo.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="https://burmese-agriculture.vercel.app/logo.png">
+        <link rel="apple-touch-icon" href="https://burmese-agriculture.vercel.app/logo.png">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -17,7 +20,7 @@
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
-                background-color:#FEFCE8;
+                background-color: #F0F7E9;
 
             }
             
@@ -279,6 +282,29 @@
     .card {
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+    .dropdown-item:hover {
+                background-color: #f0fdf4;
+                color: #22C55D;
+            }
+            .navbar {
+                box-shadow: 0 2px 10px rgba(34, 197, 94, 0.15);
+            }
+
+            .navbar-brand {
+                font-weight: 600;
+                font-size: 1.5rem;
+            }
+
+            .dropdown-menu {
+                border-radius: 12px;
+                border: none;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .dropdown-item {
+                padding: 0.75rem 1.5rem;
+                transition: all 0.2s ease;
+            }
     .forum-masked {
         cursor: pointer;
         padding: 10px;
@@ -660,8 +686,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             label.textContent = count > 0 ? `${count} ပုံရွေးချယ်ပြီး` : 'ပုံရွေးရန်';
                         }
                     </script>
-                    <div class="text-right mt-4" style="position: absolute; bottom: 0; right: 0; padding: 20px; z-index: 1000;">
-                        <button type="submit" class="btn btn-success">တင်ရန်</button>
+                    <div class="text-right mt-4" style="position: absolute; bottom: 0; right: 0; padding: 20px;">
+                        <button type="submit" class="btn btn-success px-4">တင်ရန်</button>
                     </div>
                 </form>
             </div>

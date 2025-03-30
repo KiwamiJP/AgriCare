@@ -25,7 +25,7 @@ class UserTableSeeder extends Seeder
             'name' => "User",
             'email' => 'user@gmail.com',
             'password' => 'password', // This will trigger the setPasswordAttribute method
-            'role' => 'user',
+            'role' => 'farmer',
         ]);
     }
 }

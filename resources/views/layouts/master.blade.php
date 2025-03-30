@@ -22,8 +22,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" href="{{asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
     <link rel="stylesheet" href="{{asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
-</head>
-<body class="hold-transition sidebar-mini">
+    <head>
+      <!-- Multiple favicon sizes -->
+      <link rel="icon" type="image/png" sizes="32x32" href="https://burmese-agriculture.vercel.app/logo.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="https://burmese-agriculture.vercel.app/logo.png">
+        <link rel="apple-touch-icon" href="https://burmese-agriculture.vercel.app/logo.png">
+    </head>
+</body class="hold-transition sidebar-mini">
 <div class="wrapper">
 
   <!-- Navbar -->

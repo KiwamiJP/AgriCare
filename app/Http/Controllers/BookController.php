@@ -37,14 +37,21 @@ class BookController extends Controller
 
     public function store(Request $request)
 {
-    $request->validate([
-        'title' => 'required|string|max:255',
-        'author' => 'required|string|max:255',
-        'category_id' => 'required|exists:categories,id',
-        'file' => 'required|file|mimes:pdf,epub,mobi|max:51200', // Validate file upload
-        'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10000', // Validate cover image upload
-        'description' => 'required|string',
-    ]);
+    try {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'file' => 'required|file|mimes:pdf,epub,mobi|max:51200',
+            'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10000',
+            'description' => 'required|string',
+        ], [
+            'file.mimes' => 'စာအုပ်ဖိုင်သည် pdf, epub, mobi ဖြစ်ရမည်။',
+            'file.max' => 'စာအုပ်ဖိုင်သည် 50MB ထက်မကြီးသင့်ပါ။',
+            'cover_image.mimes' => 'ဓာတ်ပုံဖိုင်သည် jpeg, png, jpg, gif ဖြစ်ရမည်။',
+            'cover_image.max' => 'ဓာတ်ပုံဖိုင်သည် 10MB ထက်မကြီးသင့်ပါ။',
+            'cover_image.image' => 'ဖိုင်အမျိုးအစားသည် ပုံဖိုင်ဖြစ်ရမည်။',
+        ]);
 
     $originalFileName = $request->file('file')->getClientOriginalName();
 
@@ -65,6 +72,12 @@ Book::create([
 ]);
 
     return redirect()->route('admin.books.index')->with('success', 'Book added successfully.');
+} catch (\Illuminate\Validation\ValidationException $e) {
+    return redirect()->back()
+        ->withErrors($e->validator)
+        ->withInput();
+}
+
 }
     public function show(Book $book)
     {
@@ -79,14 +92,21 @@ Book::create([
 
     public function update(Request $request, Book $book)
 {
-    $request->validate([
-        'title' => 'required|string|max:255',
-        'author' => 'required|string|max:255',
-        'category_id' => 'required|exists:categories,id',
-        'file' => 'nullable|file|mimes:pdf,epub,mobi|max:51200', // File is optional in update
-        'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10000', // Cover image optional
-        'description' => 'required|string',
-    ]);
+    try {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'file' => 'nullable|file|mimes:pdf,epub,mobi|max:51200',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10000',
+            'description' => 'required|string',
+        ], [
+            'file.mimes' => 'စာအုပ်ဖိုင်သည် pdf, epub, mobi ဖြစ်ရမည်။',
+            'file.max' => 'စာအုပ်ဖိုင်သည် 50MB ထက်မကြီးသင့်ပါ။',
+            'cover_image.mimes' => 'ဓာတ်ပုံဖိုင်သည် jpeg, png, jpg, gif ဖြစ်ရမည်။',
+            'cover_image.max' => 'ဓာတ်ပုံဖိုင်သည် 10MB ထက်မကြီးသင့်ပါ။',
+            'cover_image.image' => 'ဖိုင်အမျိုးအစားသည် ပုံဖိုင်ဖြစ်ရမည်။',
+        ]);
 
     $data = $request->only(['title', 'author', 'category_id']);
 
@@ -123,6 +143,11 @@ Book::create([
     $book->update($data);
 
     return redirect()->route('admin.books.index')->with('success', 'Book updated successfully.');
+} catch (\Illuminate\Validation\ValidationException $e) {
+    return redirect()->back()
+        ->withErrors($e->validator)
+        ->withInput();
+}
 }
 
     public function destroy(Book $book)

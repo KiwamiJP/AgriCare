@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::paginate(10);
-        $totalUsers = User::where('role', 'user')->count();
+        $totalUsers = User::where('role', 'farmer')->count();
         $totalAgronomists = User::where('role', 'agronomist')->count();
         $totalPosts = Post::count();
         $totalQuestions = QuestionAnswer::count();

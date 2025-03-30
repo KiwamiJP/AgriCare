@@ -18,6 +18,6 @@ class UserRoleSeeder extends Seeder
               User::where('email', 'admin@gmail.com')->update(['role' => 'admin']);
 
               // Optionally, set the role to 'user' for all other users
-              User::where('role', '')->update(['role' => 'user']);
+              User::where('role', '')->update(['role' => 'farmer']);
     }
 }

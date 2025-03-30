@@ -5,7 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>AgriCare</title>
-
+        <head>
+        <!-- Multiple favicon sizes -->
+        <link rel="icon" type="image/png" sizes="32x32" href="https://burmese-agriculture.vercel.app/logo.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="https://burmese-agriculture.vercel.app/logo.png">
+        <link rel="apple-touch-icon" href="https://burmese-agriculture.vercel.app/logo.png">
+</head>
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -17,15 +22,116 @@
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
-                background-color:#FEFCE8;
+                background-color: #F0F7E9;
             }
-            
-        .card-img-top {
-            width: 100%;
-            height: 200px; /* Set a fixed height */
-            object-fit: cover; /* Ensure the image covers the area without distortion */
-        }
-    
+
+            .navbar {
+                box-shadow: 0 2px 10px rgba(34, 197, 94, 0.15);
+            }
+
+            .navbar-brand {
+                font-weight: 600;
+                font-size: 1.5rem;
+            }
+
+            .dropdown-menu {
+                border-radius: 12px;
+                border: none;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .dropdown-item {
+                padding: 0.75rem 1.5rem;
+                transition: all 0.2s ease;
+            }
+
+            .dropdown-item:hover {
+                background-color: #f0fdf4;
+                color: #22C55D;
+            }
+
+            .card {
+                height: 100%;
+                border-radius: 15px;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                border: none;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                background: white;
+            }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(34, 197, 94, 0.2);
+            }
+
+            .card-img-wrapper {
+                position: relative;
+                width: 100%;
+                padding-top: 60%;
+                overflow: hidden;
+                background-color: #f3f4f6;
+            }
+
+            .card-img-top {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.5s ease;
+            }
+
+            .card:hover .card-img-top {
+                transform: scale(1.05);
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .card-title {
+                color: #1f2937;
+                font-weight: 600;
+                margin-bottom: 0.75rem;
+                font-size: 1.1rem;
+                line-height: 1.4;
+            }
+
+            .card-text {
+                color: #4b5563;
+                margin-bottom: 1.25rem;
+                line-height: 1.6;
+                font-size: 0.95rem;
+            }
+
+            .btn-success {
+                background-color: #22C55D;
+                border: none;
+                padding: 0.5rem 1.5rem;
+                border-radius: 25px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                width: 50%;
+            }
+
+            .btn-success:hover {
+                background-color: #1ea550;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+            }
+
+            .nav-link {
+                font-weight: 500;
+                padding: 0.5rem 1rem;
+                transition: all 0.2s ease;
+            }
+
+            .nav-link:hover {
+                transform: translateY(-1px);
+            }
+           
         </style>
     </head>
     <body class="antialiased">
@@ -105,22 +211,30 @@
             @foreach ($posts ?? '' as $post)
                 <div class="col-md-4 mb-4">
                     <div class="card">
-                        @if ($post->photo)
-                            <img src="{{ asset('images/' . $post->photo) }}" class="card-img-top" alt="{{ $post->title }}">
-                        @endif
-                        <div class="card-body">
-                            <h5 class="card-title">{{ Str::limit($post->title,25) }}</h5>
-                            <p class="card-text">{{ Str::limit($post->content, 100) }}</p>
-                            <a href="{{ route('posts.show', $post->id) }}" class="btn btn-success">ပိုမိုလေ့လာရန်</a>
+                        <div class="card-img-wrapper">
+                            @if ($post->photo)
+                                <img src="{{ asset('images/' . $post->photo) }}" class="card-img-top" alt="{{ $post->title }}">
+                            @else
+                                <img src="{{ asset('images/default-post.jpg') }}" class="card-img-top" alt="Default Image">
+                            @endif
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ Str::limit($post->title, 25) }}</h5>
+                            <p class="card-text flex-grow-1">{{ Str::limit($post->content, 100) }}</p>
+                            <a href="{{ route('posts.show', $post->id) }}" class="btn btn-success">
+                                ပိုမိုလေ့လာရန်
+                            </a>
                         </div>
                     </div>
                 </div>
             @endforeach
         </div>
+           
     </div>
        <!-- Scripts -->
        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </body>
+ 
 </html>

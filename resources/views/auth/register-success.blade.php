@@ -3,10 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Multiple favicon sizes -->
-<link rel="icon" type="image/png" sizes="32x32" href="https://burmese-agriculture.vercel.app/logo.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="https://burmese-agriculture.vercel.app/logo.png">
-        <link rel="apple-touch-icon" href="https://burmese-agriculture.vercel.app/logo.png">
+
         <title>AgriCare</title>
 
         <!-- Fonts -->
@@ -21,7 +18,6 @@
             body {
                 font-family: 'Nunito', sans-serif;
                 background-color:#F0F7E9;
-
             }
             
         .card-img-top {
@@ -29,35 +25,94 @@
             height: 200px; /* Set a fixed height */
             object-fit: cover; /* Ensure the image covers the area without distortion */
         }
-        .dropdown-item:hover {
-                background-color: #f0fdf4;
-                color: #22C55D;
-            }
-            .navbar {
-                box-shadow: 0 2px 10px rgba(34, 197, 94, 0.15);
-            }
+        .nature-gradient {
+    background: linear-gradient(45deg, #1b8d53, #34c277);
+    position: relative;
+}
 
-            .navbar-brand {
-                font-weight: 600;
-                font-size: 1.5rem;
-            }
+.leaf-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 40' width='80' height='40'%3E%3Cpath fill='%23ffffff' d='M0 40a19.96 19.96 0 0 1 5.9-14.11 20.17 20.17 0 0 1 19.44-5.2A20 20 0 0 1 20.2 40H0zM65.32.75A20.02 20.02 0 0 1 40.8 25.26 20.02 20.02 0 0 1 65.32.76zM.07 0h20.1l-.08.07A20.02 20.02 0 0 1 .75 5.25 20.08 20.08 0 0 1 .07 0zm1.94 40h2.53l4.26-4.24v-9.78A17.96 17.96 0 0 0 2 40zm5.38 0h9.8a17.98 17.98 0 0 0 6.67-16.42L7.4 40zm3.43-15.42v9.17l11.62-11.59c-3.97-.5-8.08.3-11.62 2.42zm32.86-.78A18 18 0 0 0 63.85 3.63L43.68 23.8zm7.2-19.17v9.15L62.43 2.22c-3.96-.5-8.05.3-11.57 2.4zm-3.49 2.72c-4.1 4.1-5.81 9.69-5.13 15.03l6.61-6.6V6.02c-.51.41-1 .85-1.48 1.33zM17.18 0H7.42L3.64 3.78A18 18 0 0 0 17.18 0zM2.08 0c-.01.8.04 1.58.14 2.37L4.59 0H2.07z'%3E%3C/path%3E%3C/svg%3E");
+}
 
-            .dropdown-menu {
-                border-radius: 12px;
-                border: none;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            }
+.card {
+    border-radius: 20px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+}
 
-            .dropdown-item {
-                padding: 0.75rem 1.5rem;
-                transition: all 0.2s ease;
-            }
+.custom-input {
+    border: 2px solid #e8f5e9;
+    border-radius: 10px;
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+}
+
+.custom-input:focus {
+    border-color: #1b8d53;
+    box-shadow: 0 0 0 0.25rem rgba(27, 141, 83, 0.15);
+}
+
+.eco-button {
+    background: linear-gradient(45deg, #1b8d53, #34c277);
+    border-radius: 10px;
+    padding: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border: none;
+}
+
+.eco-button:hover {
+    background: linear-gradient(45deg, #167445, #2ba867);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(27, 141, 83, 0.2);
+}
+
+.farm-bg {
+    background: linear-gradient(135deg, #ffffff, #f8faf8);
+}
+
+.nature-gradient-light {
+    background: linear-gradient(45deg, #f1f8e9, #e8f5e9);
+}
+
+body {
+    background: linear-gradient(135deg, #f1f8e9, #e8f5e9);
+    min-height: 100vh;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    color: #1b8d53;
+    transform: scale(.85) translateY(-0.75rem) translateX(0.15rem);
+}
+
+.text-success {
+    color: #1b8d53 !important;
+}
+
+.text-success:hover {
+    color: #167445 !important;
+    text-decoration: none;
+}
+
+.form-check-input:checked {
+    background-color: #1b8d53;
+    border-color: #1b8d53;
+}
     
         </style>
     </head>
     <body class="antialiased">
         <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-dark text-white sticky-top" style="background-color:#22C55D !important">
+    <!-- Update the navbar section -->
+    <nav class="navbar navbar-expand-lg navbar-dark text-white sticky-top" style="background-color:#22C55D !important">
         <div class="container">
             <div class="d-flex align-items-center">
                 <img src="https://burmese-agriculture.vercel.app/logo.png" alt="Logo" style="width:50px;height:50px;margin-right:10px">
@@ -125,50 +180,59 @@
                 </ul>
             </div>
         </div>
-    </nav>  
-@php
-    // Remove the '/storage/' prefix so that Storage functions work correctly.
-    $relativeFilePath = str_replace('/storage/', '', $book->file_path);
-@endphp
-
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-3">
-            <img src="{{ asset('storage/' . $book->cover_image) }}" class="img-fluid mb-md-5 mb-sm-0" alt="{{ $book->title }}">
-            <h1 class="mb-4 d-md-none d-sm-block">{{ $book->title }}</h1>
-            <a href="{{ asset('storage/' . $relativeFilePath) }}" class="btn btn-success btn-block btn-lg" download>
-                <small>
-                    <i class="icon ion-md-download mr-1"></i>
-                    အခမဲ့ ရယူပါ ({{ round(Storage::disk('public')->size($relativeFilePath) / 1048576, 2) }} MB)
-                </small>
-            </a>
-            </div>
-            <div class="col-md-9">
-            <h1 class="d-none d-md-block my-2">{{ $book->title }}</h1>
-            <ul class="nav nav-tabs" id="bookTab" role="tablist">
-                <li class="nav-item ">
-                    <a class="nav-link active show" id="overall-tab" data-toggle="tab" href="#overall" role="tab" aria-controls="overall" aria-selected="true">Overall</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="author-tab" data-toggle="tab" href="#author" role="tab" aria-controls="author" aria-selected="false">Author</a>
-                </li>
-            </ul>
-            <div class="tab-content" id="tabContent">
-                <div class="tab-pane fade active show" id="overall" role="tabpanel" aria-labelledby="overall-tab">
-                    <p>{{ $book->description }}</p>
+    </nav>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="modal fade show" id="successModal" tabindex="-1" role="dialog" style="display: block; background: rgba(0,0,0,0.5);">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title">Registration Successful!</h5>
+                        </div>
+                        <div class="modal-body text-center py-4">
+                            <div class="mb-4">
+                                <i class="fas fa-check-circle text-success" style="font-size: 48px;"></i>
+                            </div>
+                            <h4>Thank you for registering!</h4>
+                            <p class="mb-3">Your account has been created successfully.</p>
+                            <div class="progress mb-3" style="height: 5px;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" id="redirectProgress" style="width: 0%"></div>
+                            </div>
+                            <p class="text-muted">Redirecting to login page in <span id="countdown">3</span> seconds...</p>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <a href="{{ route('login') }}" class="btn btn-success">Login Now</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="author" role="tabpanel" aria-labelledby="author-tab">
-                    <p>{{ $book->author }}</p>
-                </div>
-            </div>
             </div>
         </div>
-        
     </div>
+</div>
 
-<!-- Scripts -->
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let count = 3;
+        const countdownElement = document.getElementById('countdown');
+        const progressBar = document.getElementById('redirectProgress');
+        
+        const interval = setInterval(function() {
+            count--;
+            countdownElement.textContent = count;
+            progressBar.style.width = ((3 - count) / 3 * 100) + '%';
+            
+            if (count <= 0) {
+                clearInterval(interval);
+                window.location.href = "{{ route('login') }}";
+            }
+        }, 1000);
+    });
+</script>
+@endpush
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
 </html>

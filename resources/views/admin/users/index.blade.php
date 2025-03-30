@@ -111,7 +111,7 @@
                 <div class="small-box bg-info">
                     <div class="inner">
                         <h3>{{ $totalUsers }}</h3>
-                        <p>Total Users</p>
+                        <p>Total Farmers</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-person"></i>
